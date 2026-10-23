@@ -35,7 +35,7 @@ This file defines the high-level technical policies for Security, Testing, Perfo
   - Preload critical fonts for both Latin and Arabic typefaces.
 
 ## 4. Accessibility (a11y) & Bilingual (i18n / RTL)
-- **Standard**: WCAG 2.1 AA compliance.
+- **Standard**: WCAG 2.2 AA compliance.
 - **Directionality (BiDi)**:
   - Dynamic `dir` (`rtl` for Arabic, `ltr` for English) and `lang` attributes on the `<html>` root element.
   - Proper CSS logical properties (`margin-inline-start`, `padding-inline-end`, etc.) or Tailwind RTL variants (`rtl:` / `ltr:`) to ensure symmetric layouts.

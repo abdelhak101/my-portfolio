@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "ask": [
+      "command(git push)",
+      "command(git commit)",
+      "command(*eval*)"
+    ],
+    "deny": [
+      "read_file(*.env*)",
+      "read_file(**/.*env*)",
+      "command(*(cat|grep|more|less|tail|head)*.env*)"
+    ]
+  }
+}

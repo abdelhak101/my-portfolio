@@ -36,8 +36,8 @@ This file serves as the primary entry point for AI agents Gemini to understand t
 - **Preview**: `pnpm preview`
 - **Type/Template Check**: `pnpm check`
 - **Test**: `pnpm test` (Planned)
-- **Lint**: `pnpm lint` (Planned)
-- **Format**: `pnpm format` (Planned)
+- **Lint**: `pnpm lint` (or `pnpm lint:fix`)
+- **Format**: `pnpm format` (or `pnpm format:fix`)
 
 ## Style Guidelines
 *Concise rules for code style and structure.*

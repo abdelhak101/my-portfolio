@@ -45,8 +45,8 @@ This document defines the coding standards, style guidelines, and quality best p
 ---
 
 ## Code Formatting & Tooling
-- **Prettier**: Code formatting according to `.prettierrc` (`npm run format` / `npm run prettier:fix`).
-- **ESLint**: Linting, import organization, and best-practice enforcement (`npm run lint` / `eslint.config.js`).
+- **Prettier**: Code formatting according to `.prettierrc.mjs` (`pnpm format` / `pnpm format:fix`).
+- **ESLint**: Linting, import organization, and best-practice enforcement (`pnpm lint` / `eslint.config.js`).
 - **TypeScript**: Strict mode enabled (`strict: true`), strict null checks, and path aliases (see `tsconfig.json`).
 
 ---

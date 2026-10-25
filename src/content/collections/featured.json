@@ -9,7 +9,7 @@
     "en": "Curated selection of highlighted engineering and design work.",
     "ar": "مجموعة مختارة من أبرز الأعمال الهندسية والتصميمية."
   },
-  "projects": ["portfolio"],
+  "projects": ["portfolio", "design-system", "ai-summarizer"],
   "featured": true,
   "order": 1
 }

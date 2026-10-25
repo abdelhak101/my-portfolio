@@ -1,0 +1,46 @@
+{
+  "id": "design-system",
+  "status": "published",
+  "title": {
+    "en": "Accessible Design System",
+    "ar": "نظام تصميم متاح ومتكامل"
+  },
+  "summary": {
+    "en": "Design tokens, color contrast standards, and component specifications built for bilingual LTR/RTL interfaces.",
+    "ar": "رموز التصميم ومعايير تباين الألوان ومواصفات المكونات المصممة للواجهات ثنائية اللغة المتوافقة مع اتجاهي القراءة."
+  },
+  "types": ["design", "ui-ux"],
+  "role": {
+    "en": "Design Systems Engineer & UI Designer",
+    "ar": "مهندس أنظمة التصميم ومصمم واجهات المستخدم"
+  },
+  "skills": ["Figma", "Design Tokens", "CSS Architecture", "WCAG 2.2 AA"],
+  "date": "2026-09",
+  "cover": {
+    "src": "/images/projects/design-system-preview.webp",
+    "alt": {
+      "en": "Design tokens color palette and typography scale preview",
+      "ar": "معاينة للوحة ألوان رموز التصميم ومقياس الخطوط"
+    }
+  },
+  "links": [
+    {
+      "url": "https://github.com/example/design-system-spec",
+      "label": {
+        "en": "Design Specification",
+        "ar": "مواصفات التصميم"
+      },
+      "type": "repo"
+    }
+  ],
+  "outcomes": [
+    {
+      "metric": "100% WCAG 2.2 AA",
+      "description": {
+        "en": "Validated contrast compliance across light and dark theme pairings.",
+        "ar": "التحقق من توافق التباين عبر جميع تركيبات الأنماط الفاتحة والداكنة."
+      }
+    }
+  ],
+  "relatedProjects": ["portfolio"]
+}

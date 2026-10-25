@@ -203,4 +203,50 @@ describe('Project Content Schema (PB-004)', () => {
       ).toThrow(/Date must be YYYY, YYYY-MM, or YYYY-MM-DD/);
     });
   });
+
+  describe('Related Projects Validation (PB-006)', () => {
+    it('defaults relatedProjects to an empty array', () => {
+      const parsed = projectSchema.parse(validMinimalProject);
+      expect(parsed.relatedProjects).toEqual([]);
+    });
+
+    it('validates valid related project IDs', () => {
+      const parsed = projectSchema.parse({
+        ...validMinimalProject,
+        relatedProjects: ['other-project', 'design-system'],
+      });
+      expect(parsed.relatedProjects).toEqual([
+        'other-project',
+        'design-system',
+      ]);
+    });
+
+    it('fails when project references itself in relatedProjects', () => {
+      expect(() =>
+        projectSchema.parse({
+          ...validMinimalProject,
+          id: 'portfolio-v1',
+          relatedProjects: ['portfolio-v1'],
+        })
+      ).toThrow(/Project cannot reference itself in relatedProjects/);
+    });
+
+    it('fails when relatedProjects contains duplicates', () => {
+      expect(() =>
+        projectSchema.parse({
+          ...validMinimalProject,
+          relatedProjects: ['other-project', 'other-project'],
+        })
+      ).toThrow(/Duplicate project ID detected in relatedProjects/);
+    });
+
+    it('fails when relatedProjects contains invalid kebab-case IDs', () => {
+      expect(() =>
+        projectSchema.parse({
+          ...validMinimalProject,
+          relatedProjects: ['InvalidProjectID'],
+        })
+      ).toThrow('Related project ID must be kebab-case lowercase alphanumeric');
+    });
+  });
 });

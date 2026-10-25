@@ -61,3 +61,24 @@ This file defines the high-level technical policies for Security, Testing, Perfo
   *(e.g., `portfolio-project-code-search-cover.webp`, `portfolio-case-study-task-diagram.png`)*
 - **Source Formats**: Provide high-resolution source images, optimized to WebP or AVIF at build time.
 - **No Spaces or Special Characters**: Keep file names ASCII-compatible, lowercase, and hyphen-delimited.
+
+## 7. Content & Cross-Reference Integrity
+- **Canonical Project Identifiers**:
+  - Every project must have a unique, lowercase kebab-case identifier (`/^[a-z0-9]+(?:-[a-z0-9]+)*$/`).
+- **Self-Reference Prevention**:
+  - A project cannot reference itself in its `relatedProjects` array.
+- **Duplicate Prevention**:
+  - Duplicate project IDs are strictly prohibited in `relatedProjects` and collection `projects`.
+- **Referential Integrity**:
+  - All project IDs listed in `relatedProjects` must resolve to existing canonical project entries.
+  - All project IDs listed in collection `projects` must resolve to existing canonical project entries.
+- **Build & CI Enforcement**:
+  - `pnpm validate:content` verifies cross-content references before every build.
+  - Any missing reference or validation failure immediately aborts the build process with exit code `1`.
+  - Diagnostics format:
+    ```text
+    - [PROJECT|COLLECTION] <file-path>
+      ID: "<source-id>" -> Invalid Reference: "<missing-id>"
+      <Detailed remediation message>
+    ```
+

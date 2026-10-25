@@ -50,7 +50,8 @@ export function validateCrossReferences(input: {
 
   // 2. Validate collection membership references
   for (const collection of input.collections) {
-    const file = collection.file ?? `src/content/collections/${collection.id}.json`;
+    const file =
+      collection.file ?? `src/content/collections/${collection.id}.json`;
     const projects = collection.projects ?? [];
 
     for (const refId of projects) {

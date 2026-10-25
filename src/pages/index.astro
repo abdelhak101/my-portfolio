@@ -1,4 +1,5 @@
 ---
+import '../styles/globals.css';
 ---
 
 <html lang="en">
@@ -9,10 +10,29 @@
     <meta name="generator" content={Astro.generator} />
     <title>My Portfolio</title>
   </head>
-  <body>
-    <main>
-      <h1>My Portfolio</h1>
-      <p>Projects, Skills &amp; Proof of Work</p>
+  <body class="min-h-screen bg-bg font-sans text-text antialiased">
+    <main class="mx-auto max-w-3xl px-6 py-12">
+      <header class="border-b border-border pb-8">
+        <h1 class="text-3xl font-semibold tracking-tight">My Portfolio</h1>
+        <p class="mt-2 text-text-muted">
+          Evidence-driven engineering portfolio &amp; design system.
+        </p>
+      </header>
+      <section class="mt-8 rounded-md border border-border bg-surface p-6">
+        <h2 class="text-lg font-medium">Design System Foundation</h2>
+        <p class="mt-2 text-sm text-text-subtle">
+          Tokens configured with light and dark theme support, Swiss-inspired
+          minimalism, and mixed radii.
+        </p>
+        <div class="mt-4 flex gap-3">
+          <span class="rounded-sm border border-border-strong px-2.5 py-1 text-xs font-mono text-text">
+            Monochrome
+          </span>
+          <span class="rounded-pill bg-inverse-bg px-3 py-1 text-xs font-medium text-inverse-text">
+            P0 Complete
+          </span>
+        </div>
+      </section>
     </main>
   </body>
 </html>

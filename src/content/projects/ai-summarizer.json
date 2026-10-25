@@ -1,0 +1,39 @@
+{
+  "id": "ai-summarizer",
+  "status": "published",
+  "title": {
+    "en": "AI Technical Summarizer",
+    "ar": "ملخص المستندات التقنية بالذكاء الاصطناعي"
+  },
+  "summary": {
+    "en": "A terminal CLI tool that extracts actionable architecture summaries and changelogs from engineering documents.",
+    "ar": "أداة سطر أوامر تستخرج ملخصات معمارية وقوائم تغييرات قابلة للتنفيذ من الوثائق الهندسية."
+  },
+  "types": ["ai", "software"],
+  "role": {
+    "en": "AI Application Developer",
+    "ar": "مطور تطبيقات الذكاء الاصطناعي"
+  },
+  "skills": ["TypeScript", "LLM APIs", "CLI Development"],
+  "date": "2026-07",
+  "links": [
+    {
+      "url": "https://github.com/example/ai-technical-summarizer",
+      "label": {
+        "en": "CLI Repository",
+        "ar": "مستودع أداة الأوامر"
+      },
+      "type": "repo"
+    }
+  ],
+  "outcomes": [
+    {
+      "metric": "< 2s latency",
+      "description": {
+        "en": "Streams structured markdown sections with minimal latency for large files.",
+        "ar": "بث أقسام ماركداون المنظمة بأقل زمن استجابة للملفات الكبيرة."
+      }
+    }
+  ],
+  "relatedProjects": ["cloud-etl-pipeline"]
+}

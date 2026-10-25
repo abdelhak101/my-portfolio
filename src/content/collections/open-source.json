@@ -1,0 +1,15 @@
+{
+  "id": "open-source",
+  "status": "published",
+  "title": {
+    "en": "Open Source Tools",
+    "ar": "أدوات مفتوحة المصدر"
+  },
+  "summary": {
+    "en": "Public libraries, developer utilities, and reusable automation modules.",
+    "ar": "مكتبات عامة وأدوات للمطورين ووحدات أتمتة قابلة لإعادة الاستخدام."
+  },
+  "projects": ["cloud-etl-pipeline", "ai-summarizer"],
+  "featured": false,
+  "order": 2
+}

@@ -1,0 +1,46 @@
+{
+  "id": "portfolio",
+  "status": "published",
+  "title": {
+    "en": "Personal Portfolio",
+    "ar": "الموقع الشخصي للمشاريع"
+  },
+  "summary": {
+    "en": "A fast, accessible bilingual personal portfolio showcasing projects, skills, and proof of work.",
+    "ar": "موقع شخصي سريع ومتاح ثنائي اللغة لعرض المشاريع والمهارات ونماذج العمل الملموسة."
+  },
+  "types": ["software", "ui-ux"],
+  "role": {
+    "en": "Sole Designer and Full-Stack Developer",
+    "ar": "المصمم والمطور المتكامل الوحيد"
+  },
+  "skills": ["Astro", "TypeScript", "Tailwind CSS", "Zod", "Vitest"],
+  "date": "2026-10",
+  "cover": {
+    "src": "/images/projects/portfolio-preview.webp",
+    "alt": {
+      "en": "Preview of the personal portfolio website",
+      "ar": "معاينة لموقع المحفظة الشخصية"
+    }
+  },
+  "links": [
+    {
+      "url": "https://github.com/example/my-portfolio",
+      "label": {
+        "en": "Source Repository",
+        "ar": "مستودع الكود"
+      },
+      "type": "repo"
+    }
+  ],
+  "outcomes": [
+    {
+      "metric": "100/100",
+      "description": {
+        "en": "Achieved top Lighthouse scores for performance and accessibility.",
+        "ar": "تحقيق العلامة الكاملة في مؤشرات الأداء وإمكانية الوصول."
+      }
+    }
+  ],
+  "relatedProjects": ["design-system"]
+}

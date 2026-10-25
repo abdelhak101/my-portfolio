@@ -1,0 +1,15 @@
+{
+  "id": "featured",
+  "status": "published",
+  "title": {
+    "en": "Featured Projects",
+    "ar": "المشاريع المميزة"
+  },
+  "summary": {
+    "en": "Curated selection of highlighted engineering and design work.",
+    "ar": "مجموعة مختارة من أبرز الأعمال الهندسية والتصميمية."
+  },
+  "projects": ["portfolio", "design-system", "ai-summarizer"],
+  "featured": true,
+  "order": 1
+}

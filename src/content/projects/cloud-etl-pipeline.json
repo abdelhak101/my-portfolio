@@ -1,0 +1,39 @@
+{
+  "id": "cloud-etl-pipeline",
+  "status": "published",
+  "title": {
+    "en": "Cloud ETL Pipeline",
+    "ar": "خط معالجة البيانات السحابي"
+  },
+  "summary": {
+    "en": "Lightweight, containerized data pipeline automating daily ingestion, validation, and JSON dataset exports.",
+    "ar": "خط معالجة بيانات خفيف الوزن وحاوي يقوم بأتمتة جمع البيانات والتحقق منها وتصديرها يومياً."
+  },
+  "types": ["automation", "software"],
+  "role": {
+    "en": "Backend & Automation Engineer",
+    "ar": "مهندس العمليات الخلفية والأتمتة"
+  },
+  "skills": ["Node.js", "TypeScript", "Docker", "JSON Schema"],
+  "date": "2026-08",
+  "links": [
+    {
+      "url": "https://github.com/example/cloud-etl-pipeline",
+      "label": {
+        "en": "Pipeline Code",
+        "ar": "شفرة خط المعالجة"
+      },
+      "type": "repo"
+    }
+  ],
+  "outcomes": [
+    {
+      "metric": "100% automated",
+      "description": {
+        "en": "Zero manual intervention needed for daily data transformations and validation.",
+        "ar": "أتمتة كاملة لعمليات معالجة البيانات والتحقق من صحتها دون تدخل يدوي."
+      }
+    }
+  ],
+  "relatedProjects": []
+}

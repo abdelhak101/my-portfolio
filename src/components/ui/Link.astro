@@ -1,0 +1,55 @@
+---
+/**
+ * Reusable Link component.
+ *
+ * Props:
+ * - `href`: string (required)
+ * - `variant`: "inline" | "cta" (default: "inline")
+ * - `external`: boolean (default: false) – adds target="_blank" and rel="noopener noreferrer"
+ * - `disabled`: boolean (default: false) – renders as a <span> with aria-disabled
+ * - `class`: additional Tailwind classes (optional)
+ */
+
+export interface Props {
+  href: string;
+  variant?: 'inline' | 'cta';
+  external?: boolean;
+  disabled?: boolean;
+  class?: string;
+}
+
+const {
+  href,
+  variant = 'inline',
+  external = false,
+  disabled = false,
+  class: extraClass = '',
+} = Astro.props;
+
+const baseClasses =
+  'transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2';
+
+const variantClasses = {
+  inline: 'text-primary-600 hover:underline focus-visible:ring-primary-300',
+  cta: 'bg-primary-600 text-white px-4 py-2 rounded hover:bg-primary-700 focus-visible:ring-primary-300',
+};
+
+const classes = [baseClasses, variantClasses[variant], extraClass]
+  .filter(Boolean)
+  .join(' ');
+---
+
+{disabled ? (
+  <span class={classes} aria-disabled="true">
+    <slot />
+  </span>
+) : (
+  <a
+    href={href}
+    class={classes}
+    target={external ? '_blank' : undefined}
+    rel={external ? 'noopener noreferrer' : undefined}
+  >
+    <slot />
+  </a>
+)}

@@ -1,0 +1,63 @@
+---
+/**
+ * Reusable Button component.
+ *
+ * Props:
+ * - `variant`: "primary" | "secondary" | "danger" (default: "primary")
+ * - `size`: "sm" | "md" | "lg" (default: "md")
+ * - `disabled`: boolean (default: false)
+ * - `type`: HTMLButtonElement["type"] (default: "button")
+ * - `class`: additional Tailwind classes (optional)
+ */
+
+export interface Props {
+  variant?: 'primary' | 'secondary' | 'danger';
+  size?: 'sm' | 'md' | 'lg';
+  disabled?: boolean;
+  type?: 'button' | 'submit' | 'reset';
+  class?: string;
+}
+
+const {
+  variant = 'primary',
+  size = 'md',
+  disabled = false,
+  type = 'button',
+  class: extraClass = '',
+} = Astro.props;
+
+const variantClasses = {
+  primary:
+    'bg-primary-600 text-white hover:bg-primary-700 focus-visible:ring-primary-300',
+  secondary:
+    'bg-gray-200 text-gray-800 hover:bg-gray-300 focus-visible:ring-gray-400',
+  danger: 'bg-red-600 text-white hover:bg-red-700 focus-visible:ring-red-300',
+};
+
+const sizeClasses = {
+  sm: 'px-2 py-1 text-sm',
+  md: 'px-4 py-2 text-base',
+  lg: 'px-6 py-3 text-lg',
+};
+
+const baseClasses =
+  'rounded transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none';
+
+const classes = [
+  baseClasses,
+  variantClasses[variant],
+  sizeClasses[size],
+  extraClass,
+]
+  .filter(Boolean)
+  .join(' ');
+---
+
+<button
+  type={type}
+  class={classes}
+  disabled={disabled}
+  aria-disabled={disabled}
+>
+  <slot />
+</button>

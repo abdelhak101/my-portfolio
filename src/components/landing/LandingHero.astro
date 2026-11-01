@@ -1,0 +1,68 @@
+---
+export interface Props {
+  lang?: 'en' | 'ar';
+}
+
+const { lang = 'en' } = Astro.props;
+
+const copy = {
+  en: {
+    tag: 'Proof of Work & Engineering Portfolio',
+    heading: 'Evidence-Driven Software & AI Systems',
+    description:
+      'A personal developer portfolio showcasing verified software development, architectural design systems, and AI engineering with transparent proof of work.',
+    exploreProjects: 'Explore Projects',
+    viewCollections: 'Curated Collections',
+    badges: ['Type-safe Collections', 'Zero-JS Fast Static Delivery', '100% Verified Outcomes'],
+  },
+  ar: {
+    tag: 'نماذج العمل الملموسة وملف المشاريع الهندسي',
+    heading: 'أنظمة برمجية وهندسة ذكاء اصطناعي قائمة على الدليل',
+    description:
+      'ملف أعمال شخصي يوثق مشاريع برمجية وأنظمة ذكاء اصطناعي مثبتة بالنتائج والأدلة الشفافة، مع التركيز على جودة البناء وسرعة الأداء.',
+    exploreProjects: 'استعراض المشاريع',
+    viewCollections: 'المجموعات المختارة',
+    badges: ['مجموعات محتوى مؤكدة الأنواع', 'تسليم ثابت فائق السرعة', 'نتائج وأدلة موثقة بنسبة 100%'],
+  },
+};
+
+const t = copy[lang];
+---
+
+<section class="border-b border-border pb-12 pt-6 sm:pb-16 sm:pt-10">
+  <div class="inline-flex items-center gap-2 rounded-sm border border-border bg-surface px-2.5 py-1 text-xs font-mono text-text-muted">
+    <span class="inline-block h-2 w-2 rounded-pill bg-success"></span>
+    {t.tag}
+  </div>
+
+  <h1 class="mt-5 text-3xl font-semibold tracking-tight text-text sm:text-5xl sm:leading-tight">
+    {t.heading}
+  </h1>
+
+  <p class="mt-4 max-w-2xl text-base text-text-muted leading-relaxed sm:text-lg">
+    {t.description}
+  </p>
+
+  <div class="mt-8 flex flex-wrap items-center gap-4">
+    <a
+      href="#projects"
+      class="inline-flex h-10 items-center justify-center rounded-sm bg-inverse-bg px-5 text-sm font-medium text-inverse-text transition-opacity hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus"
+    >
+      {t.exploreProjects}
+    </a>
+    <a
+      href="#collections"
+      class="inline-flex h-10 items-center justify-center rounded-sm border border-border bg-surface px-5 text-sm font-medium text-text transition-colors hover:bg-surface-raised focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus"
+    >
+      {t.viewCollections}
+    </a>
+  </div>
+
+  <div class="mt-8 flex flex-wrap gap-2 pt-6 border-t border-border">
+    {t.badges.map((badge) => (
+      <span class="rounded-sm border border-border bg-surface px-2.5 py-1 text-xs font-mono text-text-subtle">
+        {badge}
+      </span>
+    ))}
+  </div>
+</section>

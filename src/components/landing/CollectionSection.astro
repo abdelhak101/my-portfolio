@@ -1,0 +1,50 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import type { ResolvedCollection } from '../../content/queries/collections';
+import ProjectCard from '../ui/ProjectCard.astro';
+
+export interface Props {
+  collections: ResolvedCollection<CollectionEntry<'projects'>>[];
+  lang?: 'en' | 'ar';
+}
+
+const { collections, lang = 'en' } = Astro.props;
+
+const sectionHeading = lang === 'ar' ? 'المجموعات المختارة' : 'Curated Collections';
+const sectionSubtitle =
+  lang === 'ar'
+    ? 'مشاريع منظمة حسب مجالات التخصص والتركيز الهندسي'
+    : 'Thematically grouped projects organized by engineering focus';
+---
+
+<section id="collections" class="scroll-mt-20 border-b border-border py-12 sm:py-16">
+  <div class="mb-8">
+    <h2 class="text-2xl font-semibold tracking-tight text-text sm:text-3xl">
+      {sectionHeading}
+    </h2>
+    <p class="mt-2 text-sm text-text-muted sm:text-base">
+      {sectionSubtitle}
+    </p>
+  </div>
+
+  <div class="space-y-12">
+    {collections.map((col) => (
+      <div class="rounded-lg border border-border bg-surface/50 p-6 sm:p-8">
+        <div class="mb-6">
+          <h3 class="text-xl font-semibold tracking-tight text-text">
+            {col.data.title[lang] ?? col.data.title.en}
+          </h3>
+          <p class="mt-1 text-sm text-text-muted max-w-2xl">
+            {col.data.summary[lang] ?? col.data.summary.en}
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {col.projects.map((project) => (
+            <ProjectCard project={project.data} lang={lang} />
+          ))}
+        </div>
+      </div>
+    ))}
+  </div>
+</section>

@@ -1,0 +1,28 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import LandingHero from '../../components/landing/LandingHero.astro';
+import CollectionSection from '../../components/landing/CollectionSection.astro';
+import ProjectCatalog from '../../components/landing/ProjectCatalog.astro';
+import { resolveCollection } from '../../content/queries/collections';
+
+const projects = await getCollection('projects', (entry) => entry.data.status === 'published');
+const rawCollections = await getCollection('collections', (entry) => entry.data.status === 'published');
+
+const resolvedCollections = rawCollections.map((col) =>
+  resolveCollection(col, projects)
+);
+---
+
+<BaseLayout
+  title="ملف أعمالي — مشاريع برمجية وأنظمة ذكاء اصطناعي قائمة على الدليل"
+  description="ملف أعمال شخصي يوثق مشاريع برمجية وأنظمة ذكاء اصطناعي مثبتة بالأدلة والنتائج الملموسة."
+  lang="ar"
+  dir="rtl"
+>
+  <LandingHero lang="ar" />
+  {resolvedCollections.length > 0 && (
+    <CollectionSection collections={resolvedCollections} lang="ar" />
+  )}
+  <ProjectCatalog projects={projects} lang="ar" />
+</BaseLayout>

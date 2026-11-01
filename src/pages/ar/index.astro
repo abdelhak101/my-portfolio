@@ -5,8 +5,11 @@ import LandingHero from '../../components/landing/LandingHero.astro';
 import CollectionSection from '../../components/landing/CollectionSection.astro';
 import ProjectCatalog from '../../components/landing/ProjectCatalog.astro';
 import { resolveCollection } from '../../content/queries/collections';
+import { sortProjectsByDateDesc } from '../../content/queries/projects';
 
-const projects = await getCollection('projects', (entry) => entry.data.status === 'published');
+const rawProjects = await getCollection('projects', (entry) => entry.data.status === 'published');
+const projects = sortProjectsByDateDesc(rawProjects);
+
 const rawCollections = await getCollection('collections', (entry) => entry.data.status === 'published');
 
 const resolvedCollections = rawCollections.map((col) =>

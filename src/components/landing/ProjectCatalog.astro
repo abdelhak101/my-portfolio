@@ -7,14 +7,28 @@ export interface Props {
   lang?: 'en' | 'ar';
 }
 
-const { projects, lang = 'en' } = Astro.props;
+const { projects = [], lang = 'en' } = Astro.props;
 
-const heading = lang === 'ar' ? 'دليل المشاريع الشامل' : 'Project Catalogue';
-const subtitle =
-  lang === 'ar'
-    ? 'جميع المشاريع الهندسية المنشورة مع التفاصيل والأدلة التقنية'
-    : 'All published engineering projects with evidence, architecture, and source code';
-const totalLabel = lang === 'ar' ? 'مشاريع' : 'projects';
+const copy = {
+  en: {
+    heading: 'Project Catalogue',
+    subtitle: 'All published engineering projects with evidence, architecture, and source code',
+    totalLabel: 'projects',
+    emptyTitle: 'No projects published yet',
+    emptyDescription:
+      'No engineering projects are currently published in this view. Check back soon for new verified case studies and proof of work.',
+  },
+  ar: {
+    heading: 'دليل المشاريع الشامل',
+    subtitle: 'جميع المشاريع الهندسية المنشورة مع التفاصيل والأدلة التقنية',
+    totalLabel: 'مشاريع',
+    emptyTitle: 'لم يتم نشر مشاريع بعد',
+    emptyDescription:
+      'لا توجد مشاريع هندسية منشورة حالياً في هذا القسم. يرجى العودة قريباً للاطلاع على أحدث دراسات الحالة ونماذج العمل الموثقة.',
+  },
+};
+
+const t = copy[lang];
 ---
 
 <section id="projects" class="scroll-mt-20 py-12 sm:py-16">
@@ -22,21 +36,45 @@ const totalLabel = lang === 'ar' ? 'مشاريع' : 'projects';
     <div>
       <div class="flex items-center gap-3">
         <h2 class="text-2xl font-semibold tracking-tight text-text sm:text-3xl">
-          {heading}
+          {t.heading}
         </h2>
         <span class="rounded-pill bg-surface border border-border px-2.5 py-0.5 text-xs font-mono text-text-muted">
-          {projects.length} {totalLabel}
+          {projects.length} {t.totalLabel}
         </span>
       </div>
       <p class="mt-2 text-sm text-text-muted sm:text-base">
-        {subtitle}
+        {t.subtitle}
       </p>
     </div>
   </div>
 
-  <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-    {projects.map((project) => (
-      <ProjectCard project={project.data} lang={lang} />
-    ))}
-  </div>
+  {projects.length > 0 ? (
+    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      {projects.map((project) => (
+        <ProjectCard project={project.data} lang={lang} />
+      ))}
+    </div>
+  ) : (
+    <div class="rounded-lg border border-dashed border-border bg-surface/50 p-12 text-center">
+      <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-pill border border-border bg-surface text-text-muted">
+        <svg
+          class="h-6 w-6"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          stroke-width="1.5"
+          aria-hidden="true"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
+          />
+        </svg>
+      </div>
+      <h3 class="mt-4 text-base font-medium text-text">{t.emptyTitle}</h3>
+      <p class="mx-auto mt-2 max-w-md text-sm text-text-muted">{t.emptyDescription}</p>
+    </div>
+  )}
 </section>

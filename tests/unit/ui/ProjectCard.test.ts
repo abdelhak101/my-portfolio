@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 
-describe('ProjectCard component (PB-010 & PB-011)', () => {
+describe('ProjectCard component (PB-010, PB-011, PB-012)', () => {
   const content = readFileSync(
     resolve(process.cwd(), 'src/components/ui/ProjectCard.astro'),
     'utf-8'
@@ -29,13 +29,19 @@ describe('ProjectCard component (PB-010 & PB-011)', () => {
     expect(content).toContain('<span');
   });
 
-  it('includes a graceful fallback when image is missing', () => {
-    expect(content).toContain('imageSrc');
-    expect(content).toContain('No preview');
+  it('invokes Placeholder component when image is missing', () => {
+    expect(content).toContain("import Placeholder from './Placeholder.astro'");
+    expect(content).toContain('<Placeholder type="empty" message={title}');
   });
 
   it('exposes a link to the project URL', () => {
     expect(content).toContain('href={url}');
+  });
+
+  it('renders project type badges and formatted date metadata', () => {
+    expect(content).toContain('types.map');
+    expect(content).toContain('typeLabels');
+    expect(content).toContain('<time datetime={date}');
   });
 
   it('uses design system monochrome tokens instead of generic grays', () => {

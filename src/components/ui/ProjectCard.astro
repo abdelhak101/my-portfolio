@@ -1,5 +1,6 @@
 ---
 import type { Project as CanonicalProject } from '../../content/schemas/project';
+import Placeholder from './Placeholder.astro';
 
 export interface LegacyProject {
   title: string | { en: string; ar: string };
@@ -9,6 +10,8 @@ export interface LegacyProject {
   cover?: { src: string; alt?: string | { en: string; ar: string } };
   tags?: string[];
   skills?: string[];
+  types?: string[];
+  date?: string;
   url?: string;
   links?: Array<{ url: string; label: string | { en: string; ar: string }; type?: string }>;
   outcomes?: Array<{ metric?: string; description: string | { en: string; ar: string } }>;
@@ -49,9 +52,20 @@ const tags =
       ? project.tags
       : [];
 
+const types = 'types' in project && project.types ? project.types : [];
+const date = 'date' in project && project.date ? project.date : undefined;
 const url = 'url' in project && project.url ? project.url : undefined;
 const links = 'links' in project && project.links ? project.links : [];
 const outcomes = 'outcomes' in project && project.outcomes ? project.outcomes : [];
+
+const typeLabels: Record<string, { en: string; ar: string }> = {
+  software: { en: 'Software', ar: 'برمجيات' },
+  ai: { en: 'AI', ar: 'ذكاء اصطناعي' },
+  'ui-ux': { en: 'UI/UX', ar: 'واجهات وتجربة مستخدم' },
+  design: { en: 'Design', ar: 'تصميم' },
+  automation: { en: 'Automation', ar: 'أتمتة' },
+  other: { en: 'Other', ar: 'أخرى' },
+};
 
 const containerClasses = [
   'group flex flex-col rounded-md border border-border bg-surface overflow-hidden shadow-sm hover:shadow-md hover:bg-surface-raised transition-all duration-150',
@@ -70,15 +84,31 @@ const containerClasses = [
       loading="lazy"
     />
   ) : (
-    <div
-      class="h-48 w-full border-b border-border bg-surface flex items-center justify-center text-text-subtle text-xs"
-      aria-hidden="true"
-    >
-      No preview
+    <div class="h-48 w-full border-b border-border bg-surface/50 flex items-center justify-center">
+      <Placeholder type="empty" message={title} class="p-4 text-xs font-mono" />
     </div>
   )}
 
   <div class="flex flex-1 flex-col p-5">
+    {(types.length > 0 || date) && (
+      <div class="mb-3 flex flex-wrap items-center justify-between gap-2 text-xs">
+        {types.length > 0 && (
+          <div class="flex flex-wrap gap-1">
+            {types.map((t) => (
+              <span class="rounded-sm bg-surface-raised border border-border px-1.5 py-0.5 font-mono text-text-subtle">
+                {typeLabels[t]?.[lang] ?? t}
+              </span>
+            ))}
+          </div>
+        )}
+        {date && (
+          <time datetime={date} class="font-mono text-text-muted ms-auto">
+            {date}
+          </time>
+        )}
+      </div>
+    )}
+
     {url ? (
       <a
         href={url}

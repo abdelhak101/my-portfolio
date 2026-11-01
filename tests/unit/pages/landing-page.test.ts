@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { readFileSync, existsSync } from 'node:fs';
 import { resolve } from 'node:path';
 
-describe('Landing Page Architecture & i18n (PB-011)', () => {
+describe('Landing Page Architecture & i18n (PB-011 & PB-012)', () => {
   const enPagePath = resolve(process.cwd(), 'src/pages/index.astro');
   const arPagePath = resolve(process.cwd(), 'src/pages/ar/index.astro');
   const heroPath = resolve(process.cwd(), 'src/components/landing/LandingHero.astro');
@@ -52,10 +52,13 @@ describe('Landing Page Architecture & i18n (PB-011)', () => {
     expect(collectionsContent).toContain('col.data.summary');
   });
 
-  it('ProjectCatalog defines section anchor and renders responsive project grid', () => {
+  it('ProjectCatalog defines section anchor and renders responsive project grid and empty state', () => {
     expect(catalogContent).toContain('id="projects"');
     expect(catalogContent).toContain('grid');
     expect(catalogContent).toContain('<ProjectCard');
+    expect(catalogContent).toContain('emptyTitle');
+    expect(catalogContent).toContain('emptyDescription');
+    expect(catalogContent).toContain('border-dashed');
   });
 
   it('Header contains accessible language switcher linking between / and /ar', () => {

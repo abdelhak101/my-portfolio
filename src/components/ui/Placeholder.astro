@@ -1,0 +1,59 @@
+---
+/**
+ * Reusable Placeholder component for empty and error states.
+ *
+ * Props:
+ * - `type`: "empty" | "error" (default: "empty")
+ * - `message?`: custom message (optional – falls back to a sensible default)
+ * - `class?`: additional Tailwind classes (optional)
+ */
+
+export interface Props {
+  type?: 'empty' | 'error';
+  message?: string;
+  class?: string;
+}
+
+const { type = 'empty', message, class: extraClass = '' } = Astro.props;
+
+const defaultMessages = {
+  empty: 'No content available.',
+  error: 'Something went wrong. Please try again later.',
+};
+
+const displayMessage = message ?? defaultMessages[type];
+const role = type === 'error' ? 'alert' : 'status';
+
+const baseClasses = 'flex flex-col items-center justify-center p-8 text-center';
+const typeClasses = {
+  empty: 'text-gray-500',
+  error: 'text-red-600',
+};
+
+const classes = [baseClasses, typeClasses[type], extraClass]
+  .filter(Boolean)
+  .join(' ');
+---
+
+<div class={classes} role={role}>
+  {type === 'error' ? (
+    <svg
+      class="w-12 h-12 mb-2"
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      aria-hidden="true"
+    >
+      <path d="M12 0C5.37258 0 0 5.37258 0 12C0 18.6274 5.37258 24 12 24C18.6274 24 24 18.6274 24 12C24 5.37258 18.6274 0 12 0ZM13 17H11V15H13V17ZM13 13H11V7H13V13Z" />
+    </svg>
+  ) : (
+    <svg
+      class="w-12 h-12 mb-2"
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      aria-hidden="true"
+    >
+      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z" />
+    </svg>
+  )}
+  <p class="mt-2 text-base">{displayMessage}</p>
+</div>

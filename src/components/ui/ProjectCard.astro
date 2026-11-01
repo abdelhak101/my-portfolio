@@ -1,0 +1,73 @@
+---
+/**
+ * Reusable ProjectCard component.
+ *
+ * Props:
+ * - `project`: Project object
+ *   - `title`: string (required)
+ *   - `description`: string (required)
+ *   - `image?`: string – thumbnail URL (optional)
+ *   - `tags?`: string[] (optional)
+ *   - `url?`: string – project link (optional)
+ * - `class?`: additional Tailwind classes (optional)
+ */
+
+export interface Project {
+  title: string;
+  description: string;
+  image?: string;
+  tags?: string[];
+  url?: string;
+}
+
+export interface Props {
+  project: Project;
+  class?: string;
+}
+
+const { project, class: extraClass = '' } = Astro.props;
+
+const containerClasses = [
+  'group border rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow',
+  extraClass,
+]
+  .filter(Boolean)
+  .join(' ');
+
+const imageClasses = 'w-full h-48 object-cover bg-gray-100';
+const contentClasses = 'p-4';
+const titleClasses =
+  'text-lg font-semibold text-gray-900 group-hover:text-primary-600';
+const descClasses = 'mt-2 text-sm text-gray-700';
+const tagContainerClasses = 'mt-3 flex flex-wrap gap-2';
+const tagClasses = 'px-2 py-1 text-xs bg-gray-200 text-gray-800 rounded';
+---
+
+<article class={containerClasses}>
+  {project.image ? (
+    <img
+      src={project.image}
+      alt={`${project.title} thumbnail`}
+      class={imageClasses}
+    />
+  ) : (
+    <div class={imageClasses} aria-hidden="true" />
+  )}
+  <div class={contentClasses}>
+    {project.url ? (
+      <a href={project.url} class={titleClasses}>
+        <h3>{project.title}</h3>
+      </a>
+    ) : (
+      <h3 class={titleClasses}>{project.title}</h3>
+    )}
+    <p class={descClasses}>{project.description}</p>
+    {project.tags && project.tags.length > 0 && (
+      <div class={tagContainerClasses}>
+        {project.tags.map((tag) => (
+          <span class={tagClasses}>{tag}</span>
+        ))}
+      </div>
+    )}
+  </div>
+</article>

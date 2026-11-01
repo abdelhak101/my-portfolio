@@ -1,0 +1,25 @@
+---
+export interface Props {
+  authorName?: string;
+}
+
+const { authorName = 'My Portfolio' } = Astro.props;
+const currentYear = new Date().getFullYear();
+---
+
+<footer class="mt-auto w-full border-t border-border bg-surface/50">
+  <div class="mx-auto flex max-w-[1200px] flex-col items-center justify-between gap-4 px-5 py-8 text-xs text-text-muted sm:flex-row sm:px-10">
+    <p>
+      © {currentYear} {authorName}. All rights reserved.
+    </p>
+    <p class="text-text-subtle">
+      Evidence-driven developer portfolio &amp; verified proof of work.
+    </p>
+    <a
+      href="#main-content"
+      class="rounded-sm underline-offset-4 hover:text-text hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus"
+    >
+      Back to top ↑
+    </a>
+  </div>
+</footer>

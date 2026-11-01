@@ -1,18 +1,36 @@
 ---
+import BaseLayout from '../layouts/BaseLayout.astro';
 ---
 
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width" />
-    <meta name="generator" content={Astro.generator} />
-    <title>My Portfolio</title>
-  </head>
-  <body>
-    <main>
-      <h1>My Portfolio</h1>
-      <p>Projects, Skills &amp; Proof of Work</p>
-    </main>
-  </body>
-</html>
+<BaseLayout
+  title="My Portfolio — Projects, Skills & Proof of Work"
+  description="Evidence-driven developer portfolio showcasing verified software development and AI engineering."
+>
+  <header class="border-b border-border pb-8">
+    <h1 class="text-3xl font-semibold tracking-tight sm:text-4xl">
+      My Portfolio
+    </h1>
+    <p class="mt-2 text-text-muted">
+      Evidence-driven engineering portfolio &amp; design system.
+    </p>
+  </header>
+
+  <section class="mt-8 rounded-md border border-border bg-surface p-6 sm:p-8">
+    <h2 class="text-lg font-medium">Design System &amp; Global Layout</h2>
+    <p class="mt-2 text-sm text-text-subtle">
+      Tokens configured with light and dark theme support, Swiss-inspired
+      minimalism, responsive container, and accessible keyboard navigation.
+    </p>
+    <div class="mt-4 flex flex-wrap gap-3">
+      <span class="rounded-sm border border-border-strong px-2.5 py-1 text-xs font-mono text-text">
+        Monochrome
+      </span>
+      <span class="rounded-sm border border-border-strong px-2.5 py-1 text-xs font-mono text-text">
+        Max 1200px
+      </span>
+      <span class="rounded-pill bg-inverse-bg px-3 py-1 text-xs font-medium text-inverse-text">
+        PB-009 Active
+      </span>
+    </div>
+  </section>
+</BaseLayout>

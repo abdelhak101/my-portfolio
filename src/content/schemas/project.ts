@@ -34,10 +34,7 @@ export const projectSchema = z
     id: z
       .string()
       .min(1)
-      .regex(
-        idRegex,
-        'ID must be kebab-case lowercase alphanumeric'
-      ),
+      .regex(idRegex, 'ID must be kebab-case lowercase alphanumeric'),
     status: z.enum(['draft', 'published']),
     title: localizedStringSchema,
     summary: localizedStringSchema,

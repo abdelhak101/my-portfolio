@@ -1,4 +1,6 @@
 ---
+import ThemeToggle from './ThemeToggle.astro';
+
 export interface NavItem {
   label: string;
   href: string;
@@ -39,6 +41,9 @@ const { navItems = defaultNavItems } = Astro.props;
             </a>
           </li>
         ))}
+        <li class="ms-1 sm:ms-2">
+          <ThemeToggle />
+        </li>
       </ul>
     </nav>
   </div>

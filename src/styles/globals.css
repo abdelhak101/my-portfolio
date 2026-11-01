@@ -3,6 +3,10 @@
 @tailwind utilities;
 
 @layer base {
+  html {
+    transition: color 150ms ease, background-color 150ms ease;
+  }
+
   :root {
     /* Canvas & Surfaces */
     --color-bg-hsl: 0 0% 100%;

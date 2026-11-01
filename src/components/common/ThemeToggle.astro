@@ -1,0 +1,82 @@
+---
+export interface Props {
+  className?: string;
+}
+
+const { className = '' } = Astro.props;
+---
+
+<button
+  type="button"
+  id="theme-toggle"
+  class={`relative inline-flex h-9 w-9 items-center justify-center rounded-md border border-border bg-surface text-text hover:bg-surface-raised focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus transition-colors ${className}`}
+  aria-label="Switch to dark mode"
+>
+  <!-- Sun icon (shown when dark mode is active) -->
+  <svg
+    class="hidden h-4 w-4 dark:block"
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="2"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    aria-hidden="true"
+  >
+    <circle cx="12" cy="12" r="4"></circle>
+    <path d="M12 2v2"></path>
+    <path d="M12 20v2"></path>
+    <path d="m4.93 4.93 1.41 1.41"></path>
+    <path d="m17.66 17.66 1.41 1.41"></path>
+    <path d="M2 12h2"></path>
+    <path d="M20 12h2"></path>
+    <path d="m6.34 17.66-1.41 1.41"></path>
+    <path d="m19.07 4.93-1.41 1.41"></path>
+  </svg>
+
+  <!-- Moon icon (shown when light mode is active) -->
+  <svg
+    class="block h-4 w-4 dark:hidden"
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="2"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    aria-hidden="true"
+  >
+    <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path>
+  </svg>
+</button>
+
+<script>
+  function setupThemeToggle() {
+    const toggleBtn = document.getElementById('theme-toggle');
+    if (!toggleBtn) return;
+
+    const updateAriaLabel = () => {
+      const isDark = document.documentElement.classList.contains('dark');
+      toggleBtn.setAttribute(
+        'aria-label',
+        isDark ? 'Switch to light mode' : 'Switch to dark mode'
+      );
+    };
+
+    updateAriaLabel();
+
+    toggleBtn.addEventListener('click', () => {
+      const isDark = document.documentElement.classList.toggle('dark');
+      try {
+        localStorage.setItem('theme', isDark ? 'dark' : 'light');
+      } catch {
+        // Fall back gracefully if localStorage is restricted
+      }
+      updateAriaLabel();
+    });
+  }
+
+  setupThemeToggle();
+  document.addEventListener('astro:after-swap', setupThemeToggle);
+</script>

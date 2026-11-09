@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { readFileSync, existsSync } from 'node:fs';
 import { resolve } from 'node:path';
 
-describe('Landing Page Architecture & i18n (PB-011, PB-012, PB-013)', () => {
+describe('Landing Page Architecture & i18n (PB-011, PB-012, PB-013, PB-014)', () => {
   const enPagePath = resolve(process.cwd(), 'src/pages/index.astro');
   const arPagePath = resolve(process.cwd(), 'src/pages/ar/index.astro');
   const heroPath = resolve(process.cwd(), 'src/components/landing/LandingHero.astro');
@@ -68,7 +68,13 @@ describe('Landing Page Architecture & i18n (PB-011, PB-012, PB-013)', () => {
     expect(catalogContent).toContain('aria-live="polite"');
     expect(catalogContent).toContain('id="no-search-results"');
     expect(catalogContent).toContain('id="reset-search-btn"');
-    expect(catalogContent).toContain('initProjectSearch');
+    expect(catalogContent).toContain('initProjectFiltersAndSearch');
+  });
+
+  it('ProjectCatalog integrates FilterBar with project types and data-types card attributes (PB-014)', () => {
+    expect(catalogContent).toContain('<FilterBar');
+    expect(catalogContent).toContain('types={ALL_PROJECT_TYPES}');
+    expect(catalogContent).toContain('data-types=');
   });
 
   it('Header contains accessible language switcher linking between / and /ar', () => {

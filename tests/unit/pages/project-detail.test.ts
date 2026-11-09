@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { readFileSync, existsSync } from 'node:fs';
 import { resolve } from 'node:path';
 
-describe('Project Detail Pages & Architecture (PB-015)', () => {
+describe('Project Detail Pages & Technical Evidence (PB-015, PB-016)', () => {
   const enDetailPath = resolve(process.cwd(), 'src/pages/projects/[id].astro');
   const arDetailPath = resolve(process.cwd(), 'src/pages/ar/projects/[id].astro');
   const componentPath = resolve(process.cwd(), 'src/components/project/ProjectDetail.astro');
@@ -59,19 +59,26 @@ describe('Project Detail Pages & Architecture (PB-015)', () => {
     expect(componentContent).toContain('project.cover &&');
     // Outcomes are conditional
     expect(componentContent).toContain('project.outcomes.length > 0');
+    // Limitations are conditional (PB-016)
+    expect(componentContent).toContain('project.limitations && project.limitations.length > 0');
     // Skills are conditional
     expect(componentContent).toContain('project.skills.length > 0');
     // Related projects are conditional
     expect(componentContent).toContain('relatedProjects.length > 0');
   });
 
-  it('renders secure external link attributes with rel="noopener noreferrer"', () => {
+  it('renders technical evidence artifacts with badges, hostname, and rel="noopener noreferrer" (PB-016)', () => {
+    expect(componentContent).toContain('t.evidenceHeading');
+    expect(componentContent).toContain('getHostFromUrl');
+    expect(componentContent).toContain('linkTypeLabel');
     expect(componentContent).toContain('rel="noopener noreferrer"');
     expect(componentContent).toContain('target="_blank"');
   });
 
-  it('provides Arabic localization dictionary for project detail sections', () => {
+  it('provides Arabic localization dictionary for project detail sections including evidence and limitations', () => {
     expect(componentContent).toContain('العودة إلى المشاريع');
+    expect(componentContent).toContain('الأدلة التقنية والوثائق');
+    expect(componentContent).toContain('القيود الهندسية والمفاضلات');
     expect(componentContent).toContain('النتائج الرئيسية والأدلة');
     expect(componentContent).toContain('التقنيات والأدوات');
     expect(componentContent).toContain('مشاريع ذات صلة');

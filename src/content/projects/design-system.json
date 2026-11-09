@@ -25,7 +25,7 @@
   },
   "links": [
     {
-      "url": "https://github.com/example/design-system-spec",
+      "url": "https://github.com/abdelhak101/design-system-spec",
       "label": {
         "en": "Design Specification",
         "ar": "مواصفات التصميم"
@@ -40,6 +40,12 @@
         "en": "Validated contrast compliance across light and dark theme pairings.",
         "ar": "التحقق من توافق التباين عبر جميع تركيبات الأنماط الفاتحة والداكنة."
       }
+    }
+  ],
+  "limitations": [
+    {
+      "en": "Token palette focuses primarily on high-contrast monochrome values rather than multi-hue accent gradients.",
+      "ar": "تركز لوحة الرموز بشكل رئيسي على التدرجات الأحادية عالية التباين بدلاً من التدرجات اللونية المعقدة."
     }
   ],
   "relatedProjects": ["portfolio"]

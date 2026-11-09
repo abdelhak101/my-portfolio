@@ -25,12 +25,20 @@
   },
   "links": [
     {
-      "url": "https://github.com/example/my-portfolio",
+      "url": "https://github.com/abdelhak101/my-portfolio",
       "label": {
         "en": "Source Repository",
         "ar": "مستودع الكود"
       },
       "type": "repo"
+    },
+    {
+      "url": "https://github.com/abdelhak101/my-portfolio/actions",
+      "label": {
+        "en": "CI & Test Suite",
+        "ar": "سير العمل والاختبارات الآلية"
+      },
+      "type": "test"
     }
   ],
   "outcomes": [
@@ -40,6 +48,16 @@
         "en": "Achieved top Lighthouse scores for performance and accessibility.",
         "ar": "تحقيق العلامة الكاملة في مؤشرات الأداء وإمكانية الوصول."
       }
+    }
+  ],
+  "limitations": [
+    {
+      "en": "Client-side project search operates in-memory and is optimized for catalogs under 1,000 entries.",
+      "ar": "يعمل البحث عن المشاريع في ذاكرة المتصفح ومصمم لكتالوجات أقل من 1000 مشروع."
+    },
+    {
+      "en": "Static Site Generation (SSG) architecture requires rebuilds for new content additions rather than dynamic runtime querying.",
+      "ar": "تتطلب بنية التوليد الثابت للمواقع (SSG) إعادة بناء الموقع لنشر محتوى جديد بدلاً من الاستعلام المباشر وقت التشغيل."
     }
   ],
   "relatedProjects": ["design-system"]

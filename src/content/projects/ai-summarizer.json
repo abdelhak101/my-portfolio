@@ -18,7 +18,7 @@
   "date": "2026-07",
   "links": [
     {
-      "url": "https://github.com/example/ai-technical-summarizer",
+      "url": "https://github.com/abdelhak101/ai-technical-summarizer",
       "label": {
         "en": "CLI Repository",
         "ar": "مستودع أداة الأوامر"
@@ -33,6 +33,12 @@
         "en": "Streams structured markdown sections with minimal latency for large files.",
         "ar": "بث أقسام ماركداون المنظمة بأقل زمن استجابة للملفات الكبيرة."
       }
+    }
+  ],
+  "limitations": [
+    {
+      "en": "Requires active external LLM API access credentials and outbound internet connection.",
+      "ar": "يتطلب مفاتيح وصول صالحة لواجهات الذكاء الاصطناعي واتصالاً بالإنترنت."
     }
   ],
   "relatedProjects": ["cloud-etl-pipeline"]

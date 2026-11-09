@@ -82,3 +82,14 @@ This file defines the high-level technical policies for Security, Testing, Perfo
       <Detailed remediation message>
     ```
 
+## 8. Technical Evidence & Confidentiality Policy
+- **Zero Fabrication**:
+  - Metrics, benchmarks, test results, and outcomes must derive from reproducible runs, production analytics, or real deployments. Fabricated, guessed, or exaggerated metrics are strictly forbidden.
+- **Explicit Artifact Classification**:
+  - External links must be classified with concrete artifact types (`repo`, `demo`, `test`, `case-study`, `review`). Generic untyped links should be avoided whenever a semantic type applies.
+- **Honest Limitations & Trade-Offs**:
+  - Complex engineering systems should explicitly document known constraints, throughput limits, memory bounds, or architectural trade-offs via the `limitations` content field.
+- **Confidentiality & Non-Disclosure**:
+  - Never commit internal private API endpoints, production credentials, unredacted client intellectual property, or confidential trade secrets. Code samples, repositories, and case studies must be sanitized or publicly licensed.
+
+

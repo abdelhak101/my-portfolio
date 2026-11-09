@@ -1,6 +1,7 @@
 import { z } from 'astro/zod';
 
 const idRegex = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
+const placeholderUrlRegex = /^(https?:\/\/)?(localhost|127\.0\.0\.1|example\.com|.*todo.*|.*tbd.*)/i;
 
 export const localizedStringSchema = z.object({
   en: z.string().min(1, 'English text is required'),
@@ -58,6 +59,7 @@ export const projectSchema = z
       .optional(),
     links: z.array(projectLinkSchema).default([]),
     outcomes: z.array(projectOutcomeSchema).default([]),
+    limitations: z.array(localizedStringSchema).default([]),
     relatedProjects: z
       .array(
         z
@@ -89,6 +91,32 @@ export const projectSchema = z
         });
       }
       seen.add(pid);
+    }
+
+    // Verify evidence links for published projects
+    if (data.status === 'published') {
+      data.links.forEach((link, idx) => {
+        try {
+          const parsed = new URL(link.url);
+          if (
+            placeholderUrlRegex.test(parsed.hostname) ||
+            link.url.toLowerCase().includes('todo') ||
+            link.url.toLowerCase().includes('tbd')
+          ) {
+            ctx.addIssue({
+              code: z.ZodIssueCode.custom,
+              message: `Published project cannot contain placeholder or unverified URL: "${link.url}"`,
+              path: ['links', idx, 'url'],
+            });
+          }
+        } catch {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: `Invalid URL format: "${link.url}"`,
+            path: ['links', idx, 'url'],
+          });
+        }
+      });
     }
   });
 

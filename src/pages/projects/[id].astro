@@ -1,0 +1,37 @@
+---
+import { getCollection } from 'astro:content';
+import type { Project } from '../../content/schemas/project';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/common/Header.astro';
+import ProjectDetail from '../../components/project/ProjectDetail.astro';
+
+export async function getStaticPaths() {
+  const publishedProjects = await getCollection('projects', ({ data }) => data.status === 'published');
+
+  return publishedProjects.map((entry) => ({
+    params: { id: entry.id },
+    props: {
+      project: entry.data,
+      allProjects: publishedProjects.map((p) => p.data),
+    },
+  }));
+}
+
+interface Props {
+  project: Project;
+  allProjects: Project[];
+}
+
+const { project, allProjects } = Astro.props;
+
+const pageTitle = `${project.title.en} | Portfolio`;
+const pageDescription = project.summary.en;
+const switchTarget = `/ar/projects/${project.id}`;
+---
+
+<BaseLayout title={pageTitle} description={pageDescription} lang="en" dir="ltr">
+  <Header lang="en" switchTarget={switchTarget} />
+  <main class="mx-auto max-w-[1200px] px-5 sm:px-10">
+    <ProjectDetail project={project} allProjects={allProjects} lang="en" />
+  </main>
+</BaseLayout>

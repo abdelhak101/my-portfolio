@@ -1,0 +1,227 @@
+---
+import type { Project } from '../../content/schemas/project';
+import ProjectCard from '../ui/ProjectCard.astro';
+
+export interface Props {
+  project: Project;
+  allProjects?: Project[];
+  lang?: 'en' | 'ar';
+}
+
+const { project, allProjects = [], lang = 'en' } = Astro.props;
+
+const copy = {
+  en: {
+    backToCatalog: '← Back to projects',
+    catalogHref: '/',
+    roleLabel: 'Role:',
+    outcomesHeading: 'Key Outcomes & Evidence',
+    skillsHeading: 'Technologies & Tools',
+    relatedHeading: 'Related Projects',
+    linkTypes: {
+      repo: 'Source Code',
+      demo: 'Live Demo',
+      test: 'Test Suite',
+      'case-study': 'Case Study',
+      review: 'Review',
+      other: 'External Link',
+    },
+    typeLabels: {
+      software: 'Software',
+      ai: 'AI',
+      'ui-ux': 'UI/UX',
+      design: 'Design',
+      automation: 'Automation',
+      other: 'Other',
+    },
+  },
+  ar: {
+    backToCatalog: '← العودة إلى المشاريع',
+    catalogHref: '/ar',
+    roleLabel: 'الدور:',
+    outcomesHeading: 'النتائج الرئيسية والأدلة',
+    skillsHeading: 'التقنيات والأدوات',
+    relatedHeading: 'مشاريع ذات صلة',
+    linkTypes: {
+      repo: 'مستودع الكود',
+      demo: 'عرض حي',
+      test: 'حزمة الاختبارات',
+      'case-study': 'دراسة حالة',
+      review: 'مراجعة',
+      other: 'رابط خارجي',
+    },
+    typeLabels: {
+      software: 'برمجيات',
+      ai: 'ذكاء اصطناعي',
+      'ui-ux': 'واجهات وتجربة مستخدم',
+      design: 'تصميم',
+      automation: 'أتمتة',
+      other: 'أخرى',
+    },
+  },
+};
+
+const t = copy[lang];
+
+const title = project.title[lang] ?? project.title.en;
+const summary = project.summary[lang] ?? project.summary.en;
+const role = project.role?.[lang] ?? project.role?.en;
+
+const relatedProjects = (project.relatedProjects ?? [])
+  .map((relId) => allProjects.find((p) => p.id === relId && p.status === 'published'))
+  .filter((p): p is Project => Boolean(p));
+---
+
+<article class="py-8 sm:py-12">
+  <!-- Back navigation / Breadcrumb -->
+  <div class="mb-6">
+    <a
+      href={t.catalogHref}
+      class="inline-flex items-center text-sm font-medium text-text-muted hover:text-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus rounded-sm"
+    >
+      {t.backToCatalog}
+    </a>
+  </div>
+
+  <!-- Hero Header -->
+  <header class="border-b border-border pb-8">
+    <div class="flex flex-wrap items-center gap-2 mb-4">
+      {
+        project.types.map((type) => (
+          <span class="rounded-pill border border-border bg-surface px-2.5 py-0.5 text-xs font-mono text-text-subtle">
+            {t.typeLabels[type] ?? type}
+          </span>
+        ))
+      }
+
+      {
+        project.date && (
+          <time datetime={project.date} class="ms-auto text-xs font-mono text-text-muted">
+            {project.date}
+          </time>
+        )
+      }
+    </div>
+
+    <h1 class="text-3xl font-bold tracking-tight text-text sm:text-4xl lg:text-5xl">
+      {title}
+    </h1>
+
+    <p class="mt-4 text-base leading-relaxed text-text-muted sm:text-lg max-w-3xl">
+      {summary}
+    </p>
+
+    {
+      role && (
+        <div class="mt-4 inline-flex items-center gap-2 text-sm text-text-subtle">
+          <span class="font-medium text-text">{t.roleLabel}</span>
+          <span>{role}</span>
+        </div>
+      )
+    }
+
+    <!-- Links Bar (Rendered only when supplied) -->
+    {
+      project.links.length > 0 && (
+        <div class="mt-6 flex flex-wrap items-center gap-3">
+          {project.links.map((link) => {
+            const linkTypeLabel = link.type ? t.linkTypes[link.type] ?? link.type : undefined;
+            const labelText = link.label[lang] ?? link.label.en;
+
+            return (
+              <a
+                href={link.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="inline-flex items-center gap-2 rounded-sm border border-border bg-surface px-3.5 py-2 text-xs font-medium text-text transition-colors hover:bg-surface-raised focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus shadow-sm"
+              >
+                {linkTypeLabel && (
+                  <span class="rounded-xs bg-surface-raised border border-border px-1.5 py-0.5 text-[10px] font-mono text-text-subtle">
+                    {linkTypeLabel}
+                  </span>
+                )}
+                <span>{labelText}</span>
+                <span aria-hidden="true">↗</span>
+              </a>
+            );
+          })}
+        </div>
+      )
+    }
+  </header>
+
+  <!-- Media Cover (Rendered only when supplied) -->
+  {
+    project.cover && (
+      <section class="mt-8 overflow-hidden rounded-lg border border-border bg-surface shadow-sm">
+        <img
+          src={project.cover.src}
+          alt={project.cover.alt[lang] ?? project.cover.alt.en}
+          class="w-full max-h-[500px] object-cover"
+          loading="eager"
+        />
+      </section>
+    )
+  }
+
+  <!-- Outcomes & Metrics (Rendered only when supplied) -->
+  {
+    project.outcomes.length > 0 && (
+      <section class="mt-12">
+        <h2 class="text-xl font-semibold tracking-tight text-text sm:text-2xl mb-6">
+          {t.outcomesHeading}
+        </h2>
+        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {project.outcomes.map((outcome) => (
+            <div class="rounded-md border border-border bg-surface p-5 shadow-sm">
+              {outcome.metric && (
+                <div class="mb-2">
+                  <span class="inline-block rounded-sm bg-inverse-bg px-2.5 py-1 text-sm font-mono font-semibold text-inverse-text">
+                    {outcome.metric}
+                  </span>
+                </div>
+              )}
+              <p class="text-sm text-text-muted leading-relaxed">
+                {outcome.description[lang] ?? outcome.description.en}
+              </p>
+            </div>
+          ))}
+        </div>
+      </section>
+    )
+  }
+
+  <!-- Technologies & Skills (Rendered only when supplied) -->
+  {
+    project.skills.length > 0 && (
+      <section class="mt-12">
+        <h2 class="text-xl font-semibold tracking-tight text-text sm:text-2xl mb-4">
+          {t.skillsHeading}
+        </h2>
+        <div class="flex flex-wrap gap-2">
+          {project.skills.map((skill) => (
+            <span class="rounded-pill border border-border bg-surface px-3 py-1 text-xs font-mono text-text-muted">
+              {skill}
+            </span>
+          ))}
+        </div>
+      </section>
+    )
+  }
+
+  <!-- Related Projects (Rendered only when supplied) -->
+  {
+    relatedProjects.length > 0 && (
+      <section class="mt-16 border-t border-border pt-12">
+        <h2 class="text-xl font-semibold tracking-tight text-text sm:text-2xl mb-6">
+          {t.relatedHeading}
+        </h2>
+        <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {relatedProjects.map((relProj) => (
+            <ProjectCard project={relProj} lang={lang} />
+          ))}
+        </div>
+      </section>
+    )
+  }
+</article>

@@ -3,6 +3,7 @@ import type { Project as CanonicalProject } from '../../content/schemas/project'
 import Placeholder from './Placeholder.astro';
 
 export interface LegacyProject {
+  id?: string;
   title: string | { en: string; ar: string };
   description?: string;
   summary?: string | { en: string; ar: string };
@@ -54,7 +55,11 @@ const tags =
 
 const types = 'types' in project && project.types ? project.types : [];
 const date = 'date' in project && project.date ? project.date : undefined;
-const url = 'url' in project && project.url ? project.url : undefined;
+
+// Resolve canonical detail URL if project has an ID, else fallback to legacy URL
+const detailPath = project.id ? (lang === 'ar' ? `/ar/projects/${project.id}` : `/projects/${project.id}`) : undefined;
+const url = 'url' in project && project.url ? project.url : detailPath;
+
 const links = 'links' in project && project.links ? project.links : [];
 const outcomes = 'outcomes' in project && project.outcomes ? project.outcomes : [];
 
@@ -77,12 +82,23 @@ const containerClasses = [
 
 <article class={containerClasses}>
   {imageSrc ? (
-    <img
-      src={imageSrc}
-      alt={imageAlt}
-      class="h-48 w-full object-cover border-b border-border bg-surface"
-      loading="lazy"
-    />
+    url ? (
+      <a href={url} class="block overflow-hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus">
+        <img
+          src={imageSrc}
+          alt={imageAlt}
+          class="h-48 w-full object-cover border-b border-border bg-surface transition-transform duration-200 group-hover:scale-[1.02]"
+          loading="lazy"
+        />
+      </a>
+    ) : (
+      <img
+        src={imageSrc}
+        alt={imageAlt}
+        class="h-48 w-full object-cover border-b border-border bg-surface"
+        loading="lazy"
+      />
+    )
   ) : (
     <div class="h-48 w-full border-b border-border bg-surface/50 flex items-center justify-center">
       <Placeholder type="empty" message={title} class="p-4 text-xs font-mono" />

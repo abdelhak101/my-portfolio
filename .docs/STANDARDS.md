@@ -51,7 +51,15 @@ This file defines the high-level technical policies for Security, Testing, Perfo
 
 ## 5. SEO & Social Sharing
 - **Metadata**: Every page requires unique localized `<title>`, `<meta name="description">`, and Open Graph (`og:*`) tags.
-- **Canonical & Hreflang**: Provide canonical URLs and `hreflang` alternate links for both `en` and `ar` versions of every route.
+- **Localized URL Strategy (PB-018)**:
+  - English routes are prefix-less: `/`, `/projects/:id`, `/404`.
+  - Arabic routes use the `/ar` subpath prefix: `/ar`, `/ar/projects/:id`, `/ar/404`.
+- **Canonical & Hreflang**:
+  - Every page must declare its absolute canonical URL: `<link rel="canonical" href="...">`.
+  - Every page must provide reciprocal alternate language tags:
+    - `<link rel="alternate" hreflang="en" href="...">`
+    - `<link rel="alternate" hreflang="ar" href="...">`
+    - `<link rel="alternate" hreflang="x-default" href="...">` (pointing to the primary English route).
 - **Structured Data**: JSON-LD schema (e.g., `Person`, `ProfilePage`, `CreativeWork`) embedded on key pages.
 - **Sitemap & Robots**: Maintain auto-generated `sitemap.xml` and standard `robots.txt`.
 

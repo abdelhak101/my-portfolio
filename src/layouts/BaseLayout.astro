@@ -3,6 +3,7 @@ import SkipLink from '../components/common/SkipLink.astro';
 import Header from '../components/common/Header.astro';
 import Footer from '../components/common/Footer.astro';
 import '../styles/globals.css';
+import { getCanonicalUrl, getHreflangLinks, DEFAULT_SITE_URL } from '../utils/i18n';
 
 export interface Props {
   title?: string;
@@ -19,6 +20,11 @@ const {
 } = Astro.props;
 
 const resolvedDir = dir ?? (lang === 'ar' ? 'rtl' : 'ltr');
+
+const siteUrl = Astro.site?.href ?? DEFAULT_SITE_URL;
+const pathname = Astro.url.pathname;
+const canonicalUrl = getCanonicalUrl(pathname, siteUrl);
+const hreflangLinks = getHreflangLinks(pathname, siteUrl);
 ---
 
 <!doctype html>
@@ -30,6 +36,10 @@ const resolvedDir = dir ?? (lang === 'ar' ? 'rtl' : 'ltr');
     <meta name="generator" content={Astro.generator} />
     <meta name="description" content={description} />
     <title>{title}</title>
+    <link rel="canonical" href={canonicalUrl} />
+    {hreflangLinks.map(({ lang: hLang, url }) => (
+      <link rel="alternate" hreflang={hLang} href={url} />
+    ))}
     <script is:inline>
       (() => {
         try {

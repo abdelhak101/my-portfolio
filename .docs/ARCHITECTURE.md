@@ -121,6 +121,21 @@ Projects and collections must follow strict schemas to ensure data integrity:
 3. **Structured Evidence**: Explicit links to source code, live demos, test suites, or case studies.
 4. **Referential Integrity**: Collections validate that all referenced project IDs actually exist at build time.
 
+## Localized Routing & URL Strategy (PB-018)
+
+The portfolio adopts a **default prefix-less English + `/ar` subpath Arabic** routing strategy:
+
+| Route Type | English (Default) | Arabic (`/ar`) |
+|---|---|---|
+| Landing / Catalog | `/` | `/ar` |
+| Project Detail | `/projects/:id` | `/ar/projects/:id` |
+| 404 Error Page | `/404` (`/404.html`) | `/ar/404` (`/ar/404/index.html`) |
+
+### Core Invariants:
+1. **Language Symmetry**: Every English route has an exact reciprocal Arabic counterpart at `/ar/{path}`.
+2. **SEO Parity**: All static pages declare `<link rel="canonical">` and reciprocal `<link rel="alternate" hreflang="...">` tags for `en`, `ar`, and `x-default`.
+3. **Internal Navigation**: Internal navigation preserves active language context via pure `localizePath()` and `getAlternatePath()` helpers.
+
 ## Coding Standards & Conventions
 
 - **Naming Conventions**: camelCase for variables/functions, PascalCase for components and schemas.

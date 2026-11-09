@@ -62,4 +62,23 @@ describe('Global Page Layout Architecture (PB-009)', () => {
     expect(baseLayoutContent).toContain("dir ?? (lang === 'ar' ? 'rtl' : 'ltr')");
     expect(baseLayoutContent).toContain('<html lang={lang} dir={resolvedDir}');
   });
+
+  it('BaseLayout injects canonical and hreflang metadata (PB-018)', () => {
+    // i18n utility imports
+    expect(baseLayoutContent).toContain("from '../utils/i18n'");
+    expect(baseLayoutContent).toContain('getCanonicalUrl');
+    expect(baseLayoutContent).toContain('getHreflangLinks');
+
+    // Canonical link tag
+    expect(baseLayoutContent).toContain('rel="canonical"');
+    expect(baseLayoutContent).toContain('href={canonicalUrl}');
+
+    // Hreflang alternate tags
+    expect(baseLayoutContent).toContain('rel="alternate"');
+    expect(baseLayoutContent).toContain('hreflang={hLang}');
+
+    // Runtime URL resolution using Astro.site with fallback
+    expect(baseLayoutContent).toContain('Astro.site');
+    expect(baseLayoutContent).toContain('Astro.url.pathname');
+  });
 });

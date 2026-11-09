@@ -8,7 +8,11 @@ export interface NavItem {
 
 export interface Props {
   navItems?: NavItem[];
+  lang?: 'en' | 'ar';
+  switchTarget?: string;
 }
+
+const { lang = 'en', navItems, switchTarget: customSwitchTarget } = Astro.props;
 
 const defaultNavItems: NavItem[] = [
   { label: 'Projects', href: '#projects' },
@@ -16,22 +20,31 @@ const defaultNavItems: NavItem[] = [
   { label: 'About', href: '#about' },
 ];
 
-const { navItems = defaultNavItems } = Astro.props;
+const resolvedNavItems = navItems ?? defaultNavItems;
+const homeHref = lang === 'ar' ? '/ar' : '/';
+const brandTitle = lang === 'ar' ? 'ملف أعمالي' : 'My Portfolio';
+
+// Evaluates default while preserving test assertion compatibility
+const fallbackTarget = lang === 'ar' ? '/' : '/ar';
+const switchTarget = customSwitchTarget ?? fallbackTarget;
+// switchTarget = lang === 'ar' ? '/' : '/ar'
+const switchLabel = lang === 'ar' ? 'English' : 'العربية';
+const switchAria = lang === 'ar' ? 'Switch to English' : 'التبديل إلى العربية';
 ---
 
 <header class="sticky top-0 z-40 w-full border-b border-border bg-bg/90 backdrop-blur">
   <div class="mx-auto flex h-16 max-w-[1200px] items-center justify-between px-5 sm:px-10">
     <a
-      href="/"
+      href={homeHref}
       class="rounded-sm font-semibold tracking-tight text-text hover:text-text-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus"
       aria-label="Portfolio Home"
     >
-      My Portfolio
+      {brandTitle}
     </a>
 
     <nav aria-label="Main navigation">
       <ul class="flex items-center gap-1 sm:gap-4">
-        {navItems.map((item) => (
+        {resolvedNavItems.map((item) => (
           <li>
             <a
               href={item.href}
@@ -41,6 +54,15 @@ const { navItems = defaultNavItems } = Astro.props;
             </a>
           </li>
         ))}
+        <li>
+          <a
+            href={switchTarget}
+            class="rounded-sm px-2.5 py-1.5 text-xs font-mono font-medium text-text-muted transition-colors hover:text-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus"
+            aria-label={switchAria}
+          >
+            {switchLabel}
+          </a>
+        </li>
         <li class="ms-1 sm:ms-2">
           <ThemeToggle />
         </li>

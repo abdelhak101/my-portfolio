@@ -1,0 +1,63 @@
+---
+import type { ProjectType } from '../../content/schemas/project';
+
+interface Props {
+  types: string[];
+  lang?: 'en' | 'ar';
+}
+
+const { types, lang = 'en' } = Astro.props;
+
+const typeLabels: Record<string, Record<ProjectType, string>> = {
+  en: {
+    software: 'Software',
+    design: 'Design',
+    'ui-ux': 'UI/UX',
+    automation: 'Automation',
+    ai: 'AI',
+    other: 'Other',
+  },
+  ar: {
+    software: 'برمجيات',
+    design: 'تصميم',
+    'ui-ux': 'واجهات',
+    automation: 'أتمتة',
+    ai: 'ذكاء اصطناعي',
+    other: 'أخرى',
+  },
+};
+
+const labels = typeLabels[lang];
+const clearLabel = lang === 'ar' ? 'مسح الكل' : 'Clear all';
+const groupLabel = lang === 'ar' ? 'تصفية حسب النوع' : 'Filter by type';
+---
+
+<div role="group" aria-label={groupLabel} class="flex flex-wrap items-center gap-2">
+  {
+    types.map((type) => (
+      <button
+        type="button"
+        data-filter-type={type}
+        aria-pressed="false"
+        class="filter-pill rounded-pill border border-border bg-surface px-3 py-1 text-sm text-text transition-colors hover:border-border-strong hover:bg-surface-raised focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus"
+      >
+        {labels[type as ProjectType] ?? type}
+      </button>
+    ))
+  }
+
+  <button
+    type="button"
+    data-filter-clear
+    hidden
+    class="rounded-pill border border-border-strong px-3 py-1 text-sm text-text-muted transition-colors hover:text-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus"
+  >
+    {clearLabel}
+  </button>
+</div>
+
+<style>
+  .filter-pill[aria-pressed='true'] {
+    @apply border-transparent bg-inverse-bg text-inverse-text;
+  }
+</style>

@@ -1,0 +1,75 @@
+---
+export interface Props {
+  id?: string;
+  placeholder?: string;
+  ariaLabel?: string;
+  lang?: 'en' | 'ar';
+  class?: string;
+}
+
+const {
+  id = 'project-search',
+  lang = 'en',
+  placeholder = lang === 'ar'
+    ? 'ابحث بالاسم، المهارات، أو نوع المشروع...'
+    : 'Search by title, skill, or project type...',
+  ariaLabel = lang === 'ar' ? 'البحث في المشاريع' : 'Search projects',
+  class: extraClass = '',
+} = Astro.props;
+
+const clearAriaLabel = lang === 'ar' ? 'مسح البحث' : 'Clear search';
+---
+
+<div class={`relative flex items-center w-full max-w-md ${extraClass}`} role="search">
+  <label for={id} class="sr-only">
+    {ariaLabel}
+  </label>
+
+  <div class="pointer-events-none absolute inset-y-0 start-0 flex items-center ps-3 text-text-subtle">
+    <svg
+      class="h-4 w-4"
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+      stroke-width="2"
+      aria-hidden="true"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
+      />
+    </svg>
+  </div>
+
+  <input
+    type="search"
+    id={id}
+    name="search"
+    placeholder={placeholder}
+    autocomplete="off"
+    autocorrect="off"
+    spellcheck="false"
+    class="w-full rounded-md border border-border bg-surface py-2 pe-9 ps-9 text-sm text-text placeholder:text-text-subtle transition-colors focus:border-border-strong focus:bg-surface-raised focus:outline-none focus-visible:ring-2 focus-visible:ring-focus"
+  />
+
+  <button
+    type="button"
+    id={`${id}-clear`}
+    class="absolute inset-y-0 end-0 hidden items-center pe-3 text-text-subtle hover:text-text focus:outline-none focus-visible:ring-2 focus-visible:ring-focus rounded-sm"
+    aria-label={clearAriaLabel}
+  >
+    <svg
+      class="h-4 w-4"
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+      stroke-width="2"
+      aria-hidden="true"
+    >
+      <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+    </svg>
+  </button>
+</div>

@@ -1,0 +1,16 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/common/Header.astro';
+import NotFoundView from '../../components/common/NotFoundView.astro';
+
+const title = 'الصفحة غير موجودة | ملف أعمالي';
+const description = 'عذراً، الصفحة المطلوبة غير متوفرة.';
+const switchTarget = '/404';
+---
+
+<BaseLayout title={title} description={description} lang="ar" dir="rtl">
+  <Header lang="ar" switchTarget={switchTarget} />
+  <main class="mx-auto max-w-[1200px] px-5 sm:px-10">
+    <NotFoundView lang="ar" />
+  </main>
+</BaseLayout>

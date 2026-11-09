@@ -1,36 +1,31 @@
 ---
+import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
+import LandingHero from '../components/landing/LandingHero.astro';
+import CollectionSection from '../components/landing/CollectionSection.astro';
+import ProjectCatalog from '../components/landing/ProjectCatalog.astro';
+import { resolveCollection } from '../content/queries/collections';
+import { sortProjectsByDateDesc } from '../content/queries/projects';
+
+const rawProjects = await getCollection('projects', (entry) => entry.data.status === 'published');
+const projects = sortProjectsByDateDesc(rawProjects);
+
+const rawCollections = await getCollection('collections', (entry) => entry.data.status === 'published');
+
+const resolvedCollections = rawCollections.map((col) =>
+  resolveCollection(col, projects)
+);
 ---
 
 <BaseLayout
-  title="My Portfolio — Projects, Skills & Proof of Work"
-  description="Evidence-driven developer portfolio showcasing verified software development and AI engineering."
+  title="My Portfolio — Evidence-Driven Projects & AI Systems"
+  description="Evidence-driven personal developer portfolio showcasing verified software development and AI engineering."
+  lang="en"
+  dir="ltr"
 >
-  <header class="border-b border-border pb-8">
-    <h1 class="text-3xl font-semibold tracking-tight sm:text-4xl">
-      My Portfolio
-    </h1>
-    <p class="mt-2 text-text-muted">
-      Evidence-driven engineering portfolio &amp; design system.
-    </p>
-  </header>
-
-  <section class="mt-8 rounded-md border border-border bg-surface p-6 sm:p-8">
-    <h2 class="text-lg font-medium">Design System &amp; Global Layout</h2>
-    <p class="mt-2 text-sm text-text-subtle">
-      Tokens configured with light and dark theme support, Swiss-inspired
-      minimalism, responsive container, and accessible keyboard navigation.
-    </p>
-    <div class="mt-4 flex flex-wrap gap-3">
-      <span class="rounded-sm border border-border-strong px-2.5 py-1 text-xs font-mono text-text">
-        Monochrome
-      </span>
-      <span class="rounded-sm border border-border-strong px-2.5 py-1 text-xs font-mono text-text">
-        Max 1200px
-      </span>
-      <span class="rounded-pill bg-inverse-bg px-3 py-1 text-xs font-medium text-inverse-text">
-        PB-009 Active
-      </span>
-    </div>
-  </section>
+  <LandingHero lang="en" />
+  {resolvedCollections.length > 0 && (
+    <CollectionSection collections={resolvedCollections} lang="en" />
+  )}
+  <ProjectCatalog projects={projects} lang="en" />
 </BaseLayout>

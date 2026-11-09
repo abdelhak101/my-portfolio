@@ -18,7 +18,7 @@
   "date": "2026-08",
   "links": [
     {
-      "url": "https://github.com/example/cloud-etl-pipeline",
+      "url": "https://github.com/abdelhak101/cloud-etl-pipeline",
       "label": {
         "en": "Pipeline Code",
         "ar": "شفرة خط المعالجة"
@@ -33,6 +33,12 @@
         "en": "Zero manual intervention needed for daily data transformations and validation.",
         "ar": "أتمتة كاملة لعمليات معالجة البيانات والتحقق من صحتها دون تدخل يدوي."
       }
+    }
+  ],
+  "limitations": [
+    {
+      "en": "Single-node batch executor; distributed clustering requires Kubernetes deployment configuration.",
+      "ar": "معالج دفعات أحادي العقدة؛ يتطلب التوزيع العنقودي تهيئة لنظام كوبرنيتس."
     }
   ],
   "relatedProjects": []

@@ -1,0 +1,16 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/common/Header.astro';
+import NotFoundView from '../components/common/NotFoundView.astro';
+
+const title = 'Page Not Found | Portfolio';
+const description = 'The requested page could not be found.';
+const switchTarget = '/ar/404';
+---
+
+<BaseLayout title={title} description={description} lang="en" dir="ltr">
+  <Header lang="en" switchTarget={switchTarget} />
+  <main class="mx-auto max-w-[1200px] px-5 sm:px-10">
+    <NotFoundView lang="en" />
+  </main>
+</BaseLayout>

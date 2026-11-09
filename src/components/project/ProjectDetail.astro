@@ -1,0 +1,277 @@
+---
+import type { Project } from '../../content/schemas/project';
+import ProjectCard from '../ui/ProjectCard.astro';
+
+export interface Props {
+  project: Project;
+  allProjects?: Project[];
+  lang?: 'en' | 'ar';
+}
+
+const { project, allProjects = [], lang = 'en' } = Astro.props;
+
+const copy = {
+  en: {
+    backToCatalog: '← Back to projects',
+    catalogHref: '/',
+    roleLabel: 'Role:',
+    evidenceHeading: 'Technical Evidence & Artifacts',
+    limitationsHeading: 'Engineering Constraints & Trade-Offs',
+    outcomesHeading: 'Key Outcomes & Evidence',
+    skillsHeading: 'Technologies & Tools',
+    relatedHeading: 'Related Projects',
+    linkTypes: {
+      repo: 'Source Code',
+      demo: 'Live Demo',
+      test: 'Automated Test Suite',
+      'case-study': 'Case Study',
+      review: 'Architecture Review',
+      other: 'External Artifact',
+    },
+    typeLabels: {
+      software: 'Software',
+      ai: 'AI',
+      'ui-ux': 'UI/UX',
+      design: 'Design',
+      automation: 'Automation',
+      other: 'Other',
+    },
+  },
+  ar: {
+    backToCatalog: '← العودة إلى المشاريع',
+    catalogHref: '/ar',
+    roleLabel: 'الدور:',
+    evidenceHeading: 'الأدلة التقنية والوثائق',
+    limitationsHeading: 'القيود الهندسية والمفاضلات',
+    outcomesHeading: 'النتائج الرئيسية والأدلة',
+    skillsHeading: 'التقنيات والأدوات',
+    relatedHeading: 'مشاريع ذات صلة',
+    linkTypes: {
+      repo: 'مستودع الكود',
+      demo: 'عرض حي',
+      test: 'حزمة الاختبارات الآلية',
+      'case-study': 'دراسة حالة',
+      review: 'مراجعة معمارية',
+      other: 'وثيقة خارجية',
+    },
+    typeLabels: {
+      software: 'برمجيات',
+      ai: 'ذكاء اصطناعي',
+      'ui-ux': 'واجهات وتجربة مستخدم',
+      design: 'تصميم',
+      automation: 'أتمتة',
+      other: 'أخرى',
+    },
+  },
+};
+
+const t = copy[lang];
+
+const title = project.title[lang] ?? project.title.en;
+const summary = project.summary[lang] ?? project.summary.en;
+const role = project.role?.[lang] ?? project.role?.en;
+
+const relatedProjects = (project.relatedProjects ?? [])
+  .map((relId) => allProjects.find((p) => p.id === relId && p.status === 'published'))
+  .filter((p): p is Project => Boolean(p));
+
+const getHostFromUrl = (urlString: string): string => {
+  try {
+    return new URL(urlString).hostname;
+  } catch {
+    return '';
+  }
+};
+---
+
+<article class="py-8 sm:py-12">
+  <!-- Back navigation / Breadcrumb -->
+  <div class="mb-6">
+    <a
+      href={t.catalogHref}
+      class="inline-flex items-center text-sm font-medium text-text-muted hover:text-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus rounded-sm"
+    >
+      {t.backToCatalog}
+    </a>
+  </div>
+
+  <!-- Hero Header -->
+  <header class="border-b border-border pb-8">
+    <div class="flex flex-wrap items-center gap-2 mb-4">
+      {
+        project.types.map((type) => (
+          <span class="rounded-pill border border-border bg-surface px-2.5 py-0.5 text-xs font-mono text-text-subtle">
+            {t.typeLabels[type] ?? type}
+          </span>
+        ))
+      }
+
+      {
+        project.date && (
+          <time datetime={project.date} class="ms-auto text-xs font-mono text-text-muted">
+            {project.date}
+          </time>
+        )
+      }
+    </div>
+
+    <h1 class="text-3xl font-bold tracking-tight text-text sm:text-4xl lg:text-5xl">
+      {title}
+    </h1>
+
+    <p class="mt-4 text-base leading-relaxed text-text-muted sm:text-lg max-w-3xl">
+      {summary}
+    </p>
+
+    {
+      role && (
+        <div class="mt-4 inline-flex items-center gap-2 text-sm text-text-subtle">
+          <span class="font-medium text-text">{t.roleLabel}</span>
+          <span>{role}</span>
+        </div>
+      )
+    }
+  </header>
+
+  <!-- Technical Evidence & Artifacts Section (Rendered only when supplied) -->
+  {
+    project.links.length > 0 && (
+      <section class="mt-10">
+        <h2 class="text-xl font-semibold tracking-tight text-text sm:text-2xl mb-4">
+          {t.evidenceHeading}
+        </h2>
+        <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          {project.links.map((link) => {
+            const linkTypeLabel = link.type ? t.linkTypes[link.type] ?? link.type : t.linkTypes.other;
+            const labelText = link.label[lang] ?? link.label.en;
+            const host = getHostFromUrl(link.url);
+
+            return (
+              <a
+                href={link.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="group flex flex-col justify-between rounded-md border border-border bg-surface p-4 transition-all hover:bg-surface-raised hover:border-border-strong focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus shadow-sm"
+              >
+                <div>
+                  <div class="flex items-center justify-between gap-2 mb-2">
+                    <span class="rounded-pill bg-surface-raised border border-border px-2 py-0.5 text-[11px] font-mono font-medium text-text-subtle">
+                      {linkTypeLabel}
+                    </span>
+                    <span class="text-text-muted group-hover:text-text transition-colors" aria-hidden="true">
+                      ↗
+                    </span>
+                  </div>
+                  <h3 class="text-sm font-semibold text-text group-hover:text-text leading-snug">
+                    {labelText}
+                  </h3>
+                </div>
+                {host && (
+                  <p class="mt-3 text-xs font-mono text-text-subtle truncate">
+                    {host}
+                  </p>
+                )}
+              </a>
+            );
+          })}
+        </div>
+      </section>
+    )
+  }
+
+  <!-- Media Cover (Rendered only when supplied) -->
+  {
+    project.cover && (
+      <section class="mt-10 overflow-hidden rounded-lg border border-border bg-surface shadow-sm">
+        <img
+          src={project.cover.src}
+          alt={project.cover.alt[lang] ?? project.cover.alt.en}
+          class="w-full max-h-[500px] object-cover"
+          loading="eager"
+        />
+      </section>
+    )
+  }
+
+  <!-- Outcomes & Metrics (Rendered only when supplied) -->
+  {
+    project.outcomes.length > 0 && (
+      <section class="mt-12">
+        <h2 class="text-xl font-semibold tracking-tight text-text sm:text-2xl mb-6">
+          {t.outcomesHeading}
+        </h2>
+        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {project.outcomes.map((outcome) => (
+            <div class="rounded-md border border-border bg-surface p-5 shadow-sm">
+              {outcome.metric && (
+                <div class="mb-2">
+                  <span class="inline-block rounded-sm bg-inverse-bg px-2.5 py-1 text-sm font-mono font-semibold text-inverse-text">
+                    {outcome.metric}
+                  </span>
+                </div>
+              )}
+              <p class="text-sm text-text-muted leading-relaxed">
+                {outcome.description[lang] ?? outcome.description.en}
+              </p>
+            </div>
+          ))}
+        </div>
+      </section>
+    )
+  }
+
+  <!-- Engineering Constraints & Trade-Offs (Rendered only when supplied) -->
+  {
+    project.limitations && project.limitations.length > 0 && (
+      <section class="mt-12">
+        <h2 class="text-xl font-semibold tracking-tight text-text sm:text-2xl mb-4">
+          {t.limitationsHeading}
+        </h2>
+        <div class="rounded-lg border border-border bg-surface/60 p-5 shadow-sm">
+          <ul class="space-y-2.5">
+            {project.limitations.map((item) => (
+              <li class="flex items-start gap-2.5 text-sm text-text-muted leading-relaxed">
+                <span class="mt-1 h-1.5 w-1.5 rounded-full bg-text-subtle shrink-0" aria-hidden="true" />
+                <span>{item[lang] ?? item.en}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+    )
+  }
+
+  <!-- Technologies & Skills (Rendered only when supplied) -->
+  {
+    project.skills.length > 0 && (
+      <section class="mt-12">
+        <h2 class="text-xl font-semibold tracking-tight text-text sm:text-2xl mb-4">
+          {t.skillsHeading}
+        </h2>
+        <div class="flex flex-wrap gap-2">
+          {project.skills.map((skill) => (
+            <span class="rounded-pill border border-border bg-surface px-3 py-1 text-xs font-mono text-text-muted">
+              {skill}
+            </span>
+          ))}
+        </div>
+      </section>
+    )
+  }
+
+  <!-- Related Projects (Rendered only when supplied) -->
+  {
+    relatedProjects.length > 0 && (
+      <section class="mt-16 border-t border-border pt-12">
+        <h2 class="text-xl font-semibold tracking-tight text-text sm:text-2xl mb-6">
+          {t.relatedHeading}
+        </h2>
+        <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {relatedProjects.map((relProj) => (
+            <ProjectCard project={relProj} lang={lang} />
+          ))}
+        </div>
+      </section>
+    )
+  }
+</article>

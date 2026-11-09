@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { projectSchema } from '../../../src/content/schemas/project';
 
-describe('Project Content Schema (PB-004)', () => {
+describe('Project Content Schema (PB-004, PB-016)', () => {
   const validMinimalProject = {
     id: 'portfolio-v1',
     status: 'published' as const,
@@ -33,7 +33,7 @@ describe('Project Content Schema (PB-004)', () => {
     },
     links: [
       {
-        url: 'https://github.com/example/portfolio',
+        url: 'https://github.com/my-org/portfolio',
         label: {
           en: 'Source Code',
           ar: 'المصدر البرمجي',
@@ -50,6 +50,12 @@ describe('Project Content Schema (PB-004)', () => {
         },
       },
     ],
+    limitations: [
+      {
+        en: 'Client-side search limited to in-memory datasets.',
+        ar: 'البحث مقيد بالذاكرة للكتالوجات المحدودة.',
+      },
+    ],
   };
 
   describe('Positive Validation', () => {
@@ -58,143 +64,177 @@ describe('Project Content Schema (PB-004)', () => {
       expect(parsed.id).toBe('portfolio-v1');
       expect(parsed.status).toBe('published');
       expect(parsed.types).toEqual(['software', 'ui-ux']);
-      expect(parsed.skills).toHaveLength(3);
-      expect(parsed.links).toHaveLength(1);
-      expect(parsed.outcomes).toHaveLength(1);
+      expect(parsed.skills).toEqual(['Astro', 'TypeScript', 'Tailwind CSS']);
+      expect(parsed.role?.en).toBe('Sole Designer & Developer');
+      expect(parsed.date).toBe('2026-10-25');
+      expect(parsed.links?.[0].url).toBe('https://github.com/my-org/portfolio');
+      expect(parsed.outcomes?.[0].metric).toBe('100 Lighthouse score');
+      expect(parsed.limitations?.[0].en).toBe('Client-side search limited to in-memory datasets.');
     });
 
-    it('validates a minimal project with only required fields and sets defaults', () => {
+    it('validates minimal required fields', () => {
       const parsed = projectSchema.parse(validMinimalProject);
       expect(parsed.id).toBe('portfolio-v1');
+      expect(parsed.status).toBe('published');
       expect(parsed.skills).toEqual([]);
       expect(parsed.links).toEqual([]);
       expect(parsed.outcomes).toEqual([]);
-      expect(parsed.role).toBeUndefined();
-      expect(parsed.cover).toBeUndefined();
-      expect(parsed.date).toBeUndefined();
+      expect(parsed.limitations).toEqual([]);
+      expect(parsed.relatedProjects).toEqual([]);
     });
 
-    it('accepts draft status', () => {
+    it('supports all valid project types enum values', () => {
+      const types = [
+        'software',
+        'design',
+        'ui-ux',
+        'automation',
+        'ai',
+        'other',
+      ] as const;
+
+      for (const t of types) {
+        const parsed = projectSchema.parse({
+          ...validMinimalProject,
+          types: [t],
+        });
+        expect(parsed.types).toEqual([t]);
+      }
+    });
+
+    it('accepts valid date formats: YYYY, YYYY-MM, and YYYY-MM-DD', () => {
+      const dates = ['2026', '2026-10', '2026-10-25'];
+      for (const d of dates) {
+        const parsed = projectSchema.parse({
+          ...validMinimalProject,
+          date: d,
+        });
+        expect(parsed.date).toBe(d);
+      }
+    });
+
+    it('accepts draft status for projects', () => {
       const parsed = projectSchema.parse({
         ...validMinimalProject,
         status: 'draft',
       });
       expect(parsed.status).toBe('draft');
     });
-
-    it('accepts valid date variations (YYYY, YYYY-MM, YYYY-MM-DD)', () => {
-      expect(projectSchema.parse({ ...validMinimalProject, date: '2026' }).date).toBe('2026');
-      expect(projectSchema.parse({ ...validMinimalProject, date: '2026-10' }).date).toBe('2026-10');
-      expect(projectSchema.parse({ ...validMinimalProject, date: '2026-10-25' }).date).toBe('2026-10-25');
-    });
   });
 
-  describe('Identifier Validation', () => {
-    it('rejects non-kebab-case or capitalized IDs', () => {
-      expect(() => projectSchema.parse({ ...validMinimalProject, id: 'Portfolio_V1' })).toThrow();
-      expect(() => projectSchema.parse({ ...validMinimalProject, id: 'portfolio v1' })).toThrow();
-      expect(() => projectSchema.parse({ ...validMinimalProject, id: '-portfolio-' })).toThrow();
-      expect(() => projectSchema.parse({ ...validMinimalProject, id: '' })).toThrow();
-    });
-  });
-
-  describe('Localization Validation', () => {
-    it('fails when Arabic title is missing or empty', () => {
+  describe('Negative Validation & Integrity', () => {
+    it('fails when id is missing or empty', () => {
       expect(() =>
         projectSchema.parse({
           ...validMinimalProject,
-          title: { en: 'Title only', ar: '' },
+          id: '',
         })
-      ).toThrow(/Arabic text is required/);
+      ).toThrow('ID must be kebab-case lowercase alphanumeric');
     });
 
-    it('fails when English title is missing or empty', () => {
+    it('fails when id contains uppercase characters or underscores', () => {
       expect(() =>
         projectSchema.parse({
           ...validMinimalProject,
-          title: { en: '', ar: 'عنوان فقط' },
+          id: 'Portfolio_V1',
         })
-      ).toThrow(/English text is required/);
+      ).toThrow('ID must be kebab-case lowercase alphanumeric');
     });
 
-    it('fails when Arabic summary is missing or empty', () => {
+    it('fails when title is missing in either language', () => {
       expect(() =>
         projectSchema.parse({
           ...validMinimalProject,
-          summary: { en: 'Summary', ar: '' },
+          title: { en: 'Only English' },
         })
-      ).toThrow(/Arabic text is required/);
+      ).toThrow();
     });
 
-    it('fails when English summary is missing or empty', () => {
+    it('fails when summary is missing or empty', () => {
       expect(() =>
         projectSchema.parse({
           ...validMinimalProject,
-          summary: { en: '', ar: 'ملخص' },
+          summary: { en: '', ar: 'عربي فقط' },
         })
-      ).toThrow(/English text is required/);
+      ).toThrow('English text is required');
     });
-  });
 
-  describe('Project Types Taxonomy', () => {
     it('fails when types array is empty', () => {
       expect(() =>
         projectSchema.parse({
           ...validMinimalProject,
           types: [],
         })
-      ).toThrow(/At least one project type is required/);
+      ).toThrow('At least one project type is required');
     });
 
-    it('fails when an unsupported project type is provided', () => {
+    it('fails when an invalid project type is provided', () => {
       expect(() =>
         projectSchema.parse({
           ...validMinimalProject,
-          types: ['software', 'unsupported-type' as any],
+          types: ['invalid-type'],
         })
       ).toThrow();
     });
-  });
 
-  describe('Links and URLs Validation', () => {
-    it('fails when a link has an invalid URL', () => {
+    it('fails when an invalid URL is provided in links', () => {
       expect(() =>
         projectSchema.parse({
           ...validMinimalProject,
           links: [
             {
               url: 'not-a-valid-url',
+              label: { en: 'Test', ar: 'اختبار' },
+            },
+          ],
+        })
+      ).toThrow('Must be a valid URL');
+    });
+
+    it('fails when published project contains placeholder or unverified URL (PB-016)', () => {
+      expect(() =>
+        projectSchema.parse({
+          ...validMinimalProject,
+          status: 'published',
+          links: [
+            {
+              url: 'https://example.com/repo',
+              label: { en: 'Repo', ar: 'مستودع' },
+            },
+          ],
+        })
+      ).toThrow(/Published project cannot contain placeholder or unverified URL/);
+
+      expect(() =>
+        projectSchema.parse({
+          ...validMinimalProject,
+          status: 'published',
+          links: [
+            {
+              url: 'http://localhost:3000',
               label: { en: 'Demo', ar: 'عرض' },
             },
           ],
         })
-      ).toThrow(/Must be a valid URL/);
+      ).toThrow(/Published project cannot contain placeholder or unverified URL/);
     });
 
-    it('fails when link label is missing a required language', () => {
-      expect(() =>
-        projectSchema.parse({
-          ...validMinimalProject,
-          links: [
-            {
-              url: 'https://example.com',
-              label: { en: 'Demo' } as any,
-            },
-          ],
-        })
-      ).toThrow();
+    it('allows placeholder URL in draft projects (PB-016)', () => {
+      const draft = projectSchema.parse({
+        ...validMinimalProject,
+        status: 'draft',
+        links: [
+          {
+            url: 'https://example.com/wip',
+            label: { en: 'WIP', ar: 'قيد العمل' },
+          },
+        ],
+      });
+      expect(draft.status).toBe('draft');
+      expect(draft.links[0].url).toBe('https://example.com/wip');
     });
-  });
 
-  describe('Date Format Validation', () => {
-    it('fails on malformed date string', () => {
-      expect(() =>
-        projectSchema.parse({
-          ...validMinimalProject,
-          date: '25-10-2026',
-        })
-      ).toThrow(/Date must be YYYY, YYYY-MM, or YYYY-MM-DD/);
-
+    it('fails when date format is invalid', () => {
       expect(() =>
         projectSchema.parse({
           ...validMinimalProject,

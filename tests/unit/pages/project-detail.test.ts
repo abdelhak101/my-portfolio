@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { readFileSync, existsSync } from 'node:fs';
 import { resolve } from 'node:path';
 
-describe('Project Detail Pages & Technical Evidence (PB-015, PB-016)', () => {
+describe('Project Detail Pages & Technical Evidence (PB-015, PB-016, PB-017)', () => {
   const enDetailPath = resolve(process.cwd(), 'src/pages/projects/[id].astro');
   const arDetailPath = resolve(process.cwd(), 'src/pages/ar/projects/[id].astro');
   const componentPath = resolve(process.cwd(), 'src/components/project/ProjectDetail.astro');
@@ -18,7 +18,7 @@ describe('Project Detail Pages & Technical Evidence (PB-015, PB-016)', () => {
     expect(existsSync(arDetailPath)).toBe(true);
   });
 
-  it('filters getStaticPaths for published status only', () => {
+  it('filters getStaticPaths for published status only, excluding unknown or draft routes (PB-017)', () => {
     expect(enContent).toContain("getCollection('projects'");
     expect(enContent).toContain("status === 'published'");
     expect(arContent).toContain("getCollection('projects'");
@@ -50,21 +50,19 @@ describe('Project Detail Pages & Technical Evidence (PB-015, PB-016)', () => {
     expect(componentContent).toContain('catalogHref');
   });
 
-  it('conditionally renders optional metadata and evidence sections without broken UI', () => {
-    // Role is conditional
+  it('distinguishes missing optional content from missing projects through conditional rendering (PB-017)', () => {
+    // Missing optional content renders available fields without breaking UI
     expect(componentContent).toContain('role &&');
-    // Links are conditional
     expect(componentContent).toContain('project.links.length > 0');
-    // Cover is conditional
     expect(componentContent).toContain('project.cover &&');
-    // Outcomes are conditional
     expect(componentContent).toContain('project.outcomes.length > 0');
-    // Limitations are conditional (PB-016)
     expect(componentContent).toContain('project.limitations && project.limitations.length > 0');
-    // Skills are conditional
     expect(componentContent).toContain('project.skills.length > 0');
-    // Related projects are conditional
     expect(componentContent).toContain('relatedProjects.length > 0');
+
+    // Default arrays and fallbacks protect against undefined access
+    expect(componentContent).toContain('allProjects = []');
+    expect(componentContent).toContain('project.relatedProjects ?? []');
   });
 
   it('renders technical evidence artifacts with badges, hostname, and rel="noopener noreferrer" (PB-016)', () => {

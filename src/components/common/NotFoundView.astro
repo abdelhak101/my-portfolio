@@ -1,0 +1,62 @@
+---
+export interface Props {
+  lang?: 'en' | 'ar';
+}
+
+const { lang = 'en' } = Astro.props;
+
+const copy = {
+  en: {
+    statusBadge: '404 Error',
+    heading: 'Page Not Found',
+    description:
+      'The project, collection, or document you are looking for does not exist, may have been relocated, or is currently unpublished.',
+    homeCta: 'Return to Portfolio Home',
+    catalogCta: 'Browse Project Catalogue',
+    homeHref: '/',
+    catalogHref: '/#projects',
+  },
+  ar: {
+    statusBadge: 'خطأ 404',
+    heading: 'الصفحة غير موجودة',
+    description:
+      'المشروع، أو المجموعة، أو المستند الذي تبحث عنه غير موجود، أو ربما تم نقله، أو لم يتم نشره بعد.',
+    homeCta: 'العودة إلى الصفحة الرئيسية',
+    catalogCta: 'تصفح دليل المشاريع',
+    homeHref: '/ar',
+    catalogHref: '/ar#projects',
+  },
+};
+
+const t = copy[lang];
+---
+
+<section class="flex min-h-[60vh] flex-col items-center justify-center py-16 text-center">
+  <div class="inline-flex items-center gap-2 rounded-pill border border-border bg-surface px-3 py-1 text-xs font-mono text-text-muted">
+    <span class="h-1.5 w-1.5 rounded-full bg-text-subtle" aria-hidden="true" />
+    <span>{t.statusBadge}</span>
+  </div>
+
+  <h1 class="mt-6 text-3xl font-bold tracking-tight text-text sm:text-5xl">
+    {t.heading}
+  </h1>
+
+  <p class="mx-auto mt-4 max-w-md text-base leading-relaxed text-text-muted sm:text-lg">
+    {t.description}
+  </p>
+
+  <div class="mt-8 flex flex-wrap items-center justify-center gap-4">
+    <a
+      href={t.homeHref}
+      class="inline-flex items-center justify-center rounded-sm border border-transparent bg-inverse-bg px-5 py-2.5 text-sm font-medium text-inverse-text transition-colors hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus shadow-sm"
+    >
+      {t.homeCta}
+    </a>
+    <a
+      href={t.catalogHref}
+      class="inline-flex items-center justify-center rounded-sm border border-border bg-surface px-5 py-2.5 text-sm font-medium text-text transition-colors hover:bg-surface-raised focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus shadow-sm"
+    >
+      {t.catalogCta}
+    </a>
+  </div>
+</section>

@@ -51,7 +51,7 @@ describe('Global Page Layout Architecture (PB-009)', () => {
     expect(baseLayoutContent).toContain("import '../styles/globals.css'");
 
     expect(baseLayoutContent).toContain('<SkipLink />');
-    expect(baseLayoutContent).toContain('<Header />');
+    expect(baseLayoutContent).toContain('<Header lang={lang} switchTarget={switchTarget} />');
     expect(baseLayoutContent).toContain('<main');
     expect(baseLayoutContent).toContain('id="main-content"');
     expect(baseLayoutContent).toContain('tabindex="-1"');
@@ -80,5 +80,19 @@ describe('Global Page Layout Architecture (PB-009)', () => {
     // Runtime URL resolution using Astro.site with fallback
     expect(baseLayoutContent).toContain('Astro.site');
     expect(baseLayoutContent).toContain('Astro.url.pathname');
+  });
+
+  it('BaseLayout wires equivalent-page language switchTarget into Header (PB-019)', () => {
+    // getAlternatePath is imported
+    expect(baseLayoutContent).toContain('getAlternatePath');
+
+    // targetLang derivation
+    expect(baseLayoutContent).toContain("lang === 'ar' ? 'en' : 'ar'");
+
+    // switchTarget computed from getAlternatePath
+    expect(baseLayoutContent).toContain('getAlternatePath(pathname, targetLang)');
+
+    // Header receives lang and switchTarget props
+    expect(baseLayoutContent).toContain('<Header lang={lang} switchTarget={switchTarget} />');
   });
 });

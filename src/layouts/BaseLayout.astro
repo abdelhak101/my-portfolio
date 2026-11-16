@@ -3,7 +3,7 @@ import SkipLink from '../components/common/SkipLink.astro';
 import Header from '../components/common/Header.astro';
 import Footer from '../components/common/Footer.astro';
 import '../styles/globals.css';
-import { getCanonicalUrl, getHreflangLinks, DEFAULT_SITE_URL } from '../utils/i18n';
+import { getCanonicalUrl, getHreflangLinks, getAlternatePath, DEFAULT_SITE_URL } from '../utils/i18n';
 
 export interface Props {
   title?: string;
@@ -25,6 +25,9 @@ const siteUrl = Astro.site?.href ?? DEFAULT_SITE_URL;
 const pathname = Astro.url.pathname;
 const canonicalUrl = getCanonicalUrl(pathname, siteUrl);
 const hreflangLinks = getHreflangLinks(pathname, siteUrl);
+
+const targetLang = lang === 'ar' ? 'en' : 'ar';
+const switchTarget = getAlternatePath(pathname, targetLang);
 ---
 
 <!doctype html>
@@ -55,7 +58,7 @@ const hreflangLinks = getHreflangLinks(pathname, siteUrl);
   </head>
   <body class="flex min-h-screen flex-col bg-bg font-sans text-text antialiased">
     <SkipLink />
-    <Header />
+    <Header lang={lang} switchTarget={switchTarget} />
     <main
       id="main-content"
       tabindex="-1"

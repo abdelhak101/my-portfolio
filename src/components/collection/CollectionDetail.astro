@@ -1,0 +1,130 @@
+---
+import type { Collection } from '../../content/schemas/collection';
+import type { Project } from '../../content/schemas/project';
+import ProjectCard from '../ui/ProjectCard.astro';
+import Placeholder from '../ui/Placeholder.astro';
+
+export interface Props {
+  collection: Collection;
+  projects: Project[];
+  lang?: 'en' | 'ar';
+}
+
+const { collection, projects, lang = 'en' } = Astro.props;
+
+const copy = {
+  en: {
+    backToCatalog: 'Back to all projects',
+    catalogHref: '/',
+    featuredBadge: 'Featured Collection',
+    projectsCount: (n: number) => (n === 1 ? '1 Project' : `${n} Projects`),
+    emptyProjects: 'No published projects are currently available in this collection.',
+    exploreAllTitle: 'Looking for more work?',
+    exploreAllAction: 'Browse all projects →',
+  },
+  ar: {
+    backToCatalog: 'العودة إلى جميع المشاريع',
+    catalogHref: '/ar',
+    featuredBadge: 'مجموعة مميزة',
+    projectsCount: (n: number) => (n === 1 ? 'مشروع واحد' : `${n} مشاريع`),
+    emptyProjects: 'لا توجد مشاريع منشورة حالياً في هذه المجموعة.',
+    exploreAllTitle: 'هل تبحث عن المزيد من الأعمال؟',
+    exploreAllAction: 'تصفح جميع المشاريع ←',
+  },
+};
+
+const t = copy[lang];
+
+const title = collection.title[lang] ?? collection.title.en;
+const summary = collection.summary[lang] ?? collection.summary.en;
+---
+
+<article class="py-8 sm:py-12">
+  <!-- Back navigation / Breadcrumb -->
+  <div class="mb-6">
+    <a
+      href={t.catalogHref}
+      class="inline-flex items-center text-sm font-medium text-text-muted hover:text-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus rounded-sm"
+    >
+      <span class="inline-block rtl:rotate-180 me-1.5" aria-hidden="true">←</span>
+      <span>{t.backToCatalog}</span>
+    </a>
+  </div>
+
+  <!-- Collection Header -->
+  <header class="border-b border-border pb-8">
+    <div class="flex flex-wrap items-center gap-2 mb-4">
+      {
+        collection.featured && (
+          <span class="rounded-pill border border-border bg-inverse-bg px-2.5 py-0.5 text-xs font-mono font-medium text-inverse-text">
+            {t.featuredBadge}
+          </span>
+        )
+      }
+      <span class="rounded-pill border border-border bg-surface px-2.5 py-0.5 text-xs font-mono text-text-subtle">
+        {t.projectsCount(projects.length)}
+      </span>
+    </div>
+
+    <h1 class="text-3xl font-bold tracking-tight text-text sm:text-4xl lg:text-5xl">
+      {title}
+    </h1>
+
+    <p class="mt-4 text-base leading-relaxed text-text-muted sm:text-lg max-w-3xl">
+      {summary}
+    </p>
+  </header>
+
+  <!-- Collection Cover (if provided) -->
+  {
+    collection.cover && (
+      <section class="mt-10 overflow-hidden rounded-lg border border-border bg-surface shadow-sm">
+        <img
+          src={collection.cover.src}
+          alt={collection.cover.alt[lang] ?? collection.cover.alt.en}
+          class="w-full max-h-[400px] object-cover"
+          loading="eager"
+        />
+      </section>
+    )
+  }
+
+  <!-- Projects Grid -->
+  <section class="mt-10 sm:mt-12">
+    {
+      projects.length > 0 ? (
+        <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {projects.map((project) => (
+            <ProjectCard project={project} lang={lang} />
+          ))}
+        </div>
+      ) : (
+        <div class="py-12">
+          <Placeholder type="empty" message={t.emptyProjects} class="p-8 text-sm" />
+        </div>
+      )
+    }
+  </section>
+
+  <!-- Full Portfolio Navigation Link -->
+  <footer class="mt-16 border-t border-border pt-10 text-center sm:text-start">
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      <div>
+        <h2 class="text-base font-semibold text-text">
+          {t.exploreAllTitle}
+        </h2>
+        <p class="text-xs text-text-muted mt-1">
+          {lang === 'ar' ? 'استكشف كافة المشاريع الهندسية والأنظمة التقنية' : 'Discover all engineered projects and technical artifacts'}
+        </p>
+      </div>
+      <div>
+        <a
+          href={t.catalogHref}
+          class="inline-flex items-center justify-center rounded-sm border border-border bg-surface px-4 py-2 text-sm font-medium text-text transition-colors hover:bg-surface-raised focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus shadow-sm"
+        >
+          {t.exploreAllAction}
+        </a>
+      </div>
+    </div>
+  </footer>
+</article>

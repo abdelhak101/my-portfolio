@@ -68,4 +68,21 @@ describe('resolveCollection', () => {
       'Collection "case-studies" references non-existent project ID "non-existent-proj"'
     );
   });
+
+  it('gracefully skips missing project references when filterMissing is enabled', () => {
+    const collectionWithMissingRef: Collection = {
+      ...mockCollectionData,
+      id: 'case-studies',
+      projects: ['proj-1', 'non-existent-proj', 'proj-3'],
+    };
+
+    const resolved = resolveCollection(
+      { id: 'case-studies', data: collectionWithMissingRef },
+      mockProjects,
+      { filterMissing: true }
+    );
+
+    expect(resolved.projects).toHaveLength(2);
+    expect(resolved.projects.map((p) => p.id)).toEqual(['proj-1', 'proj-3']);
+  });
 });

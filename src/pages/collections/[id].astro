@@ -1,0 +1,45 @@
+---
+import { getCollection } from 'astro:content';
+import type { Collection } from '../../content/schemas/collection';
+import type { Project } from '../../content/schemas/project';
+import { resolveCollection } from '../../content/queries/collections';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import CollectionDetail from '../../components/collection/CollectionDetail.astro';
+
+export async function getStaticPaths() {
+  const publishedCollections = await getCollection('collections', ({ data }) => data.status === 'published');
+  const publishedProjects = await getCollection('projects', ({ data }) => data.status === 'published');
+
+  const projectDataList = publishedProjects.map((p) => p.data);
+
+  return publishedCollections.map((entry) => {
+    const resolved = resolveCollection(
+      { id: entry.id, data: entry.data },
+      projectDataList,
+      { filterMissing: true }
+    );
+
+    return {
+      params: { id: entry.id },
+      props: {
+        collection: entry.data,
+        projects: resolved.projects,
+      },
+    };
+  });
+}
+
+interface Props {
+  collection: Collection;
+  projects: Project[];
+}
+
+const { collection, projects } = Astro.props;
+
+const pageTitle = `${collection.title.en} | Portfolio Collections`;
+const pageDescription = collection.summary.en;
+---
+
+<BaseLayout title={pageTitle} description={pageDescription} lang="en" dir="ltr">
+  <CollectionDetail collection={collection} projects={projects} lang="en" />
+</BaseLayout>

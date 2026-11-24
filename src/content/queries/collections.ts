@@ -8,11 +8,12 @@ export interface ResolvedCollection<TProject> {
 
 /**
  * Resolves a collection entry with canonical project content in the specified order.
- * Throws a descriptive error if any referenced project ID is missing.
+ * Throws a descriptive error if any referenced project ID is missing, unless filterMissing is true.
  */
 export function resolveCollection<TProject extends { id: string }>(
   collection: { id: string; data: Collection },
-  availableProjects: TProject[]
+  availableProjects: TProject[],
+  options?: { filterMissing?: boolean }
 ): ResolvedCollection<TProject> {
   const projectMap = new Map<string, TProject>(
     availableProjects.map((p) => [p.id, p])
@@ -22,6 +23,9 @@ export function resolveCollection<TProject extends { id: string }>(
   for (const pid of collection.data.projects) {
     const project = projectMap.get(pid);
     if (!project) {
+      if (options?.filterMissing) {
+        continue;
+      }
       throw new Error(
         `Collection "${collection.id}" references non-existent project ID "${pid}"`
       );

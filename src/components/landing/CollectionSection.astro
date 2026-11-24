@@ -15,6 +15,8 @@ const sectionSubtitle =
   lang === 'ar'
     ? 'مشاريع منظمة حسب مجالات التخصص والتركيز الهندسي'
     : 'Thematically grouped projects organized by engineering focus';
+
+const viewCollectionLabel = lang === 'ar' ? 'عرض المجموعة' : 'View collection';
 ---
 
 <section id="collections" class="scroll-mt-20 border-b border-border py-12 sm:py-16">
@@ -28,23 +30,39 @@ const sectionSubtitle =
   </div>
 
   <div class="space-y-12">
-    {collections.map((col) => (
-      <div class="rounded-lg border border-border bg-surface/50 p-6 sm:p-8">
-        <div class="mb-6">
-          <h3 class="text-xl font-semibold tracking-tight text-text">
-            {col.data.title[lang] ?? col.data.title.en}
-          </h3>
-          <p class="mt-1 text-sm text-text-muted max-w-2xl">
-            {col.data.summary[lang] ?? col.data.summary.en}
-          </p>
-        </div>
+    {collections.map((col) => {
+      const collectionHref = lang === 'ar' ? `/ar/collections/${col.id}` : `/collections/${col.id}`;
+      return (
+        <div class="rounded-lg border border-border bg-surface/50 p-6 sm:p-8">
+          <div class="mb-6 flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-2">
+            <div>
+              <h3 class="text-xl font-semibold tracking-tight text-text">
+                <a href={collectionHref} class="hover:text-text-muted transition-colors">
+                  {col.data.title[lang] ?? col.data.title.en}
+                </a>
+              </h3>
+              <p class="mt-1 text-sm text-text-muted max-w-2xl">
+                {col.data.summary[lang] ?? col.data.summary.en}
+              </p>
+            </div>
+            <div>
+              <a
+                href={collectionHref}
+                class="inline-flex items-center text-xs font-medium text-text-muted hover:text-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus rounded-sm"
+              >
+                <span>{viewCollectionLabel}</span>
+                <span class="inline-block rtl:rotate-180 ms-1" aria-hidden="true">→</span>
+              </a>
+            </div>
+          </div>
 
-        <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {col.projects.map((project) => (
-            <ProjectCard project={project.data} lang={lang} />
-          ))}
+          <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {col.projects.map((project) => (
+              <ProjectCard project={project.data} lang={lang} />
+            ))}
+          </div>
         </div>
-      </div>
-    ))}
+      );
+    })}
   </div>
 </section>

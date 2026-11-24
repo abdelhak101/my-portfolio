@@ -7,6 +7,15 @@
     transition: color 150ms ease, background-color 150ms ease;
   }
 
+  code,
+  kbd,
+  samp,
+  pre,
+  [dir="ltr"],
+  [dir="rtl"] {
+    unicode-bidi: isolate;
+  }
+
   :root {
     /* Canvas & Surfaces */
     --color-bg-hsl: 0 0% 100%;

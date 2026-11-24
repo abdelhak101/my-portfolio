@@ -57,6 +57,7 @@ function main(): void {
     const validProject = parseResult.data;
     projects.push({
       id: validProject.id,
+      status: validProject.status,
       relatedProjects: validProject.relatedProjects,
       file: relPath,
     });
@@ -73,6 +74,7 @@ function main(): void {
     const validCollection = parseResult.data;
     collections.push({
       id: validCollection.id,
+      status: validCollection.status,
       projects: validCollection.projects,
       file: relPath,
     });

@@ -19,6 +19,15 @@ export async function getStaticPaths() {
       { filterMissing: true }
     );
 
+    // Guard: ensure no unpublished draft content is exposed in a published collection
+    for (const project of resolved.projects) {
+      if (project.status === 'draft') {
+        throw new Error(
+          `Published collection "${entry.id}" cannot expose draft project "${project.id}".`
+        );
+      }
+    }
+
     return {
       params: { id: entry.id },
       props: {

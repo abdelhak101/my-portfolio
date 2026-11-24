@@ -41,7 +41,7 @@ describe('validateCrossReferences (PB-006)', () => {
       file: 'src/content/projects/proj-a.json',
       invalidRef: 'unknown-proj',
       message:
-        'Project "proj-a" references non-existent related project "unknown-proj" in src/content/projects/proj-a.json',
+        'Project "proj-a" references non-existent related project "unknown-proj" in src/content/projects/proj-a.json. Available projects: [proj-a]',
     });
   });
 
@@ -61,7 +61,7 @@ describe('validateCrossReferences (PB-006)', () => {
       file: 'src/content/collections/featured.json',
       invalidRef: 'missing-proj',
       message:
-        'Collection "featured" references non-existent project "missing-proj" in src/content/collections/featured.json',
+        'Collection "featured" references non-existent project "missing-proj" in src/content/collections/featured.json. Available projects: [proj-a]',
     });
   });
 
@@ -104,5 +104,84 @@ describe('validateCrossReferences (PB-006)', () => {
 
     expect(result.errors[0].file).toBe('custom/path/proj.json');
     expect(result.errors[0].message).toContain('custom/path/proj.json');
+  });
+
+  describe('collection membership validation (PB-023)', () => {
+    it('fails when a published collection references a draft project', () => {
+      const result = validateCrossReferences({
+        projects: [
+          { id: 'proj-published', status: 'published' },
+          { id: 'proj-draft', status: 'draft', file: 'src/content/projects/proj-draft.json' },
+        ],
+        collections: [
+          {
+            id: 'featured',
+            status: 'published',
+            projects: ['proj-published', 'proj-draft'],
+            file: 'src/content/collections/featured.json',
+          },
+        ],
+      });
+
+      expect(result.valid).toBe(false);
+      expect(result.errors).toHaveLength(1);
+      expect(result.errors[0].message).toContain(
+        'Published collection "featured" references draft project "proj-draft"'
+      );
+      expect(result.errors[0].message).toContain(
+        'Fix: Set "status": "published" in src/content/projects/proj-draft.json or remove "proj-draft" from src/content/collections/featured.json.'
+      );
+    });
+
+    it('passes when a draft collection references a draft project', () => {
+      const result = validateCrossReferences({
+        projects: [
+          { id: 'proj-draft', status: 'draft' },
+        ],
+        collections: [
+          {
+            id: 'draft-collection',
+            status: 'draft',
+            projects: ['proj-draft'],
+          },
+        ],
+      });
+
+      expect(result.valid).toBe(true);
+      expect(result.errors).toHaveLength(0);
+    });
+
+    it('lists available project IDs when an invalid reference is encountered', () => {
+      const result = validateCrossReferences({
+        projects: [
+          { id: 'alpha-proj' },
+          { id: 'beta-proj' },
+        ],
+        collections: [
+          {
+            id: 'featured',
+            projects: ['gamma-proj'],
+          },
+        ],
+      });
+
+      expect(result.valid).toBe(false);
+      expect(result.errors[0].message).toContain('Available projects: [alpha-proj, beta-proj]');
+    });
+
+    it('permits a project to belong to multiple distinct collections', () => {
+      const result = validateCrossReferences({
+        projects: [
+          { id: 'shared-proj', status: 'published' },
+        ],
+        collections: [
+          { id: 'featured', status: 'published', projects: ['shared-proj'] },
+          { id: 'open-source', status: 'published', projects: ['shared-proj'] },
+        ],
+      });
+
+      expect(result.valid).toBe(true);
+      expect(result.errors).toHaveLength(0);
+    });
   });
 });
